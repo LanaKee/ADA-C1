@@ -1,96 +1,94 @@
-//
-//  ContentView.swift
-//  pacemaker
-//
-//  Created by Lanakee on 3/20/26.
-//
-
 import SwiftUI
 import SwiftData
 import FoundationModels
-import Playgrounds
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var items: [Item]
+    
     @State private var goal: String = ""
     @State private var output: String = ""
-    private let instruction = """
-        You are a consultant with 20 years of experience.
-        Take the user’s goal and break it down into multiple smaller goals.
-
-        Conditions:
-            1. Each goal must be achievable within one week.
-            2. Each goal must consist of specific, actionable tasks.
-            3. The goals should be structured to progressively advance step by step.
-            4. The result must be presented as a numbered list.
-            5. Always response with Korean
-        """
-
-    var body: some View {
-        Spacer()
-        Text("PaceMaker")
-            .font(.largeTitle)
-        
-        Text("이루고 싶은걸 적어주세요")
-            .font(.headline)
-            .foregroundStyle(.gray)
-        
-        HStack(spacing: 8) {
-            TextField("애플에 입사하기?", text: $goal)
-                .textInputAutocapitalization(.never)
-                .disableAutocorrection(true)
-
-            Button{
-                Task {
-                    output = await splitGoals(goal: goal)
-                }
-            } label: {
-                Image(systemName: "arrow.up")
-                    .foregroundColor(.white)
-                    .padding(10)
-                    .background(Color.blue)
-                    .clipShape(RoundedRectangle(cornerRadius: 10 ))
-            }
-            .disabled(goal.isEmpty)
-        }
-            .padding(12)
-            .background(Color(.systemGray6))
-            .clipShape(RoundedRectangle(cornerRadius: 20))
-            .padding(.horizontal, 16)
-        ScrollView {
-            Text(output.isEmpty ? "아직 결과가 없습니다." : output)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding()
-        }
-        Spacer()
+    @State private var subGoals: [String] = []
+    @State private var isGoalSet: Bool = false
+    @State private var isLoading: Bool = false
+    
+    @State private var grow: Bool = false
+    
+    private var client: FoundationModelClient {
+        FoundationModelClient(instruction: instruction)
     }
     
-    private func splitGoals(goal: String) async -> String {
-        do {
-            let session = LanguageModelSession(instructions: instruction)
-            let response = try await session.respond(to: "\(goal)을/를 이루기 위해 필요한 작은 목표들을 알려주세요")
-            return response.content
-        } catch LanguageModelSession.GenerationError.guardrailViolation {
-            return "애플 가드레일에 의해 응답이 차단되었습니다"
-        } catch {
-            return "에러 발생: \(error)"
-        }
+    private var goalManager: Goal {
+        Goal(client: client)
     }
-
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
+    
+    var body: some View {
+        VStack(spacing: 0) {
+            Spacer()
+            if isGoalSet {
+                Image("sprout")
+                    .resizable()
+                    .frame(width: 120, height: 120)
+                    .scaleEffect(grow ? 1.0 : 0.3, anchor: .bottom)
+                    .offset(y: grow ? 0 : 100)
+                    .opacity(grow ? 1 : 0)
+                    .animation(.easeOut(duration: 0.6), value: grow)
+                    .onAppear {
+                        grow = true
+                    }
             }
+            VStack {
+                HStack(spacing: 10) {
+                    TextField("애플에 입사하기", text: $goal)
+                        .textInputAutocapitalization(.never)
+                        .disableAutocorrection(true)
+                        .foregroundColor(.white)
+                    Button {
+                        Task {
+                            await generateGoals()
+                        }
+                    } label: {
+                        Group {
+                            if isLoading {
+                                ProgressView()
+                                    .tint(.white)
+                                    .frame(width: 20, height: 20)
+                            } else {
+                                Image(systemName: "arrow.up")
+                                    .font(.system(size: 18, weight: .bold))
+                                    .foregroundColor(.white)
+                            }
+                        }
+                        .frame(width: 36, height: 36)
+                        .background(Color.gray.opacity(0.8))
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
+                    .disabled(isLoading)
+                }
+                .padding(10)
+                .background(Color(red: 0.35, green: 0.22, blue: 0.12))
+                .clipShape(RoundedRectangle(cornerRadius: 16))
+                .padding(.horizontal, 16)
+                .padding(.bottom, 20)
+            }
+            .padding(.vertical, 20)
+            .background(.brown)
         }
+    }
+    
+    
+    @MainActor
+    private func generateGoals() async {
+        isGoalSet = true
+        //        let trimmed = goal.trimmingCharacters(in: .whitespacesAndNewlines)
+        //        guard !trimmed.isEmpty else { return }
+        //
+        //        isLoading = true
+        //        defer { isLoading = false }
+        //
+        //        withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+        //            isGoalSet = true
+        //        }
     }
 }
 
@@ -98,3 +96,5 @@ struct ContentView: View {
     ContentView()
         .modelContainer(for: Item.self, inMemory: true)
 }
+
+
