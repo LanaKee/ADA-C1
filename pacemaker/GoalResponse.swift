@@ -8,15 +8,15 @@ import Foundation
 import SwiftUI
 import CoreLocation
 
-struct GoalResponse: Hashable & Codable {
-    var id: Int
-    var goal: String
-    var tasks: [String]
+struct Response: Hashable & Codable {
+    let error: Bool
+    let subgoals: [GoalResponse]
 }
 
-struct ErrorResponse: Hashable & Codable {
-    let error: Bool
-    let message: String
+struct GoalResponse: Hashable & Codable {
+    let id: Int
+    let goal: String
+    let tasks: [String]
 }
 
 final class Goal {
@@ -27,20 +27,23 @@ final class Goal {
     }
 
     public func split(goal: String) async -> [GoalResponse] {
-        let responseString = await client.getResponse(
+        var responseString = await client.getResponse(
             prompt: "\(goal)을/를 이루기 위해 필요한 작은 목표들을 알려주세요"
         )
-
-        if let goals = parseJSON(responseString) as [GoalResponse]? {
-            return goals
+        responseString = responseString
+            .replacingOccurrences(of: "```json", with: "")
+            .replacingOccurrences(of: "```", with: "")
+            .replacingOccurrences(of: "\n", with: "")
+        
+        if let goal = parseJSON(responseString) as Response? {
+            return goal.subgoals
         }
 
-        if let errorResponse = parseJSON(responseString) as ErrorResponse? {
-            print("에러: \(errorResponse.message)")
-            return [GoalResponse(id: 0, goal: "Error", tasks: [errorResponse.message])]
+        if let errorResponse = parseJSON(responseString) as Response? {
+            return [GoalResponse(id: 0, goal: "Error", tasks: [errorResponse.error.description])]
         }
 
-        return [GoalResponse(id: 0, goal: "Parse Error", tasks: ["응답을 해석할 수 없습니다."])]
+        return [GoalResponse(id: 0, goal: responseString, tasks: ["Error"])]
     }
 }
 

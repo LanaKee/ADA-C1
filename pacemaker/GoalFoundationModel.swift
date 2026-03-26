@@ -1,11 +1,10 @@
 //
-//  FoundationModel.swift
+//  GoalFoundationModel.swift
 //  pacemaker
 //
-//  Created by Lanakee on 3/25/26.
+//  Created by Lanakee on 3/26/26.
 //
 
-import SwiftUI
 import FoundationModels
 
 final class FoundationModelClient {

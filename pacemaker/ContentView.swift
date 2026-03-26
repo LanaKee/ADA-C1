@@ -3,12 +3,11 @@ import SwiftData
 import FoundationModels
 
 struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
     @Query private var items: [Item]
     
     @State private var goal: String = ""
     @State private var output: String = ""
-    @State private var subGoals: [String] = []
+    @State private var subGoals: [GoalResponse] = []
     @State private var isGoalSet: Bool = false
     @State private var isLoading: Bool = false
     
@@ -25,6 +24,7 @@ struct ContentView: View {
     var body: some View {
         VStack(spacing: 0) {
             Spacer()
+            Text(output)
             if isGoalSet {
                 Image("sprout")
                     .resizable()
@@ -75,20 +75,27 @@ struct ContentView: View {
             .background(.brown)
         }
     }
+
     
-    
-    @MainActor
     private func generateGoals() async {
-        isGoalSet = true
-        //        let trimmed = goal.trimmingCharacters(in: .whitespacesAndNewlines)
-        //        guard !trimmed.isEmpty else { return }
-        //
-        //        isLoading = true
-        //        defer { isLoading = false }
-        //
-        //        withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
-        //            isGoalSet = true
-        //        }
+        let trimmed = goal.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        
+        isLoading = true
+        defer { isLoading = false }
+        subGoals = await goalManager.split(goal: trimmed)
+        var serializedSubGoals: String {
+            guard let data = try? JSONEncoder().encode(subGoals),
+                  let json = String(data: data, encoding: .utf8) else {
+                return "[]"
+            }
+            return json
+        }
+        output = serializedSubGoals
+        
+        withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+            isGoalSet = true
+        }
     }
 }
 
