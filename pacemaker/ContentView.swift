@@ -3,105 +3,124 @@ import SwiftData
 import FoundationModels
 
 struct ContentView: View {
-    @Query private var items: [Item]
-    
-    @State private var goal: String = ""
-    @State private var output: String = ""
-    @State private var subGoals: [GoalResponse] = []
-    @State private var isGoalSet: Bool = false
-    @State private var isLoading: Bool = false
-    
-    @State private var grow: Bool = false
-    
-    private var client: FoundationModelClient {
-        FoundationModelClient(instruction: instruction)
-    }
-    
-    private var goalManager: Goal {
-        Goal(client: client)
-    }
-    
-    var body: some View {
-        VStack(spacing: 0) {
-            Spacer()
-            Text(output)
-            if isGoalSet {
-                Image("sprout")
-                    .resizable()
-                    .frame(width: 120, height: 120)
-                    .scaleEffect(grow ? 1.0 : 0.3, anchor: .bottom)
-                    .offset(y: grow ? 0 : 100)
-                    .opacity(grow ? 1 : 0)
-                    .animation(.easeOut(duration: 0.6), value: grow)
-                    .onAppear {
-                        grow = true
-                    }
-            }
-            VStack {
-                HStack(spacing: 10) {
-                    TextField("애플에 입사하기", text: $goal)
-                        .textInputAutocapitalization(.never)
-                        .disableAutocorrection(true)
-                        .foregroundColor(.white)
-                    Button {
-                        Task {
-                            await generateGoals()
-                        }
-                    } label: {
-                        Group {
-                            if isLoading {
-                                ProgressView()
-                                    .tint(.white)
-                                    .frame(width: 20, height: 20)
-                            } else {
-                                Image(systemName: "arrow.up")
-                                    .font(.system(size: 18, weight: .bold))
-                                    .foregroundColor(.white)
-                            }
-                        }
-                        .frame(width: 36, height: 36)
-                        .background(Color.gray.opacity(0.8))
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                    }
-                    .disabled(isLoading)
+  @Environment(\.colorScheme) var colorScheme
+  @Query private var items: [Item]
+  
+  @State private var goal: String = ""
+  @State private var output: String = ""
+  
+  @State private var response: GoalPlan?
+  @State private var isGoalSet: Bool = false
+  @State private var isLoading: Bool = false
+  @State private var showGoalCard: Bool = false
+  
+  @State private var grow: Bool = false
+  
+  private var client: FoundationModelClient {
+    FoundationModelClient(instruction: instruction)
+  }
+  
+  var body: some View {
+    VStack(spacing: 0) {
+      if showGoalCard {
+        if let subgoals = response?.subgoals, let first = subgoals.first {
+          HStack(alignment: .top, spacing: 12) {
+            Rectangle()
+              .fill(.accent)
+              .frame(width: 3)
+              .clipShape(Capsule())
+            
+            VStack(alignment: .leading, spacing: 6) {
+              Text("1. \(first.goal)")
+                .font(.headline)
+                .padding(.bottom, 5)
+              
+              VStack(alignment: .leading, spacing: 4) {
+                ForEach(first.tasks, id: \.self) { task in
+                  Text(task)
+                    .font(.caption)
                 }
-                .padding(10)
-                .background(Color(red: 0.35, green: 0.22, blue: 0.12))
-                .clipShape(RoundedRectangle(cornerRadius: 16))
-                .padding(.horizontal, 16)
-                .padding(.bottom, 20)
+              }
             }
-            .padding(.vertical, 20)
-            .background(.brown)
+            .padding(.leading, 10)
+          }
+          .fixedSize(horizontal: false, vertical: true)
+          .frame(maxWidth: .infinity, alignment: .leading)
+          .padding()
+          .background(colorScheme == ColorScheme.light ? .gray.opacity(0.07) : .gray.opacity(0.3))
+          .cornerRadius(20)
+          .shadow(radius: 10)
+          .padding(.horizontal, 20)
         }
+      }
+      
+      Spacer()
+      if isGoalSet {
+        SproutView(
+          onTap: {
+            withAnimation(.spring(response: 0.45, dampingFraction: 0.82)) {
+              showGoalCard.toggle()
+            }
+          }
+        )
+      }
+      VStack {
+        if isGoalSet {
+          Text(goal)
+            .bold()
+            .foregroundStyle(.white)
+            .font(.title2)
+            .frame(maxWidth: .infinity, alignment: .init(horizontal: .center, vertical: .center))
+        } else {
+          InputField(isLoading: isLoading, generateGoals: generateGoals, goal: $goal)
+        }
+      }
+      .padding(.vertical, 20)
+      .background(.brown)
     }
-
+  }
+  
+  private func generateGoals() async {
+    let trimmed = goal.trimmingCharacters(in: .whitespacesAndNewlines)
+    guard !trimmed.isEmpty else { return }
     
-    private func generateGoals() async {
-        let trimmed = goal.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return }
-        
-        isLoading = true
-        defer { isLoading = false }
-        subGoals = await goalManager.split(goal: trimmed)
-        var serializedSubGoals: String {
-            guard let data = try? JSONEncoder().encode(subGoals),
-                  let json = String(data: data, encoding: .utf8) else {
-                return "[]"
-            }
-            return json
-        }
-        output = serializedSubGoals
-        
-        withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
-            isGoalSet = true
-        }
+    isLoading = true
+    defer { isLoading = false }
+    
+    let result = await client.getResponse(prompt: trimmed)
+    switch result {
+    case .success(let plan):
+      response = plan
+      output = plan.subgoals.first?.goal ?? ""
+      
+      withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+        isGoalSet = true
+      }
+    case .failure:
+      isGoalSet = false
     }
+  }
+}
+
+struct GoalView: View {
+  let goal: GoalPlanResponse
+  
+  var body: some View {
+    VStack(alignment: .leading, spacing: 12) {
+      Text(goal.goal)
+        .font(.title2)
+        .bold()
+      
+      ForEach(goal.tasks, id: \.self) { task in
+        Text("• \(task)")
+      }
+    }
+    .padding()
+    .navigationTitle("세부 목표")
+  }
 }
 
 #Preview {
-    ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
+  ContentView()
+    .modelContainer(for: Item.self, inMemory: true)
 }
-
-
