@@ -9,19 +9,18 @@ import FoundationModels
 
 @Generable
 struct GoalPlan: Hashable & Codable {
-    @Guide(description: "small seperated easy goals to help you reach your big goal", .count(5))
+    @Guide(description: "exactly 5 small, non-overlapping, sequential subgoals")
     var subgoals: [GoalPlanResponse]
 }
 
 @Generable
 struct GoalPlanResponse: Hashable & Codable {
-    @Guide(description: "unique sequential id (auto increment)")
+    @Guide(description: "sequential integer starting from 1")
     var id: Int
-    @Guide(description: "sub goal that helps you achieve your big goal")
+    @Guide(description: "one clear and actionable subgoal in Korean")
     var goal: String
-    @Guide(description: "small tasks can help you achieve your goal",.count(4))
-    var tasks: [String]
-    
+    @Guide(description: "specific explanation in Korean including concrete actions, deliverables, or checkpoints")
+    var description: String
 }
 
 
