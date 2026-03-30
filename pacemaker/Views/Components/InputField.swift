@@ -5,6 +5,7 @@
 //  Created by Lanakee on 3/26/26.
 //
 import SwiftUI
+import UIKit
 
 struct InputField: View {
     let isLoading: Bool
@@ -13,12 +14,14 @@ struct InputField: View {
     
     var body: some View {
         HStack(spacing: 10) {
-            TextField("애플에 입사하기", text: $goal)
+            TextField("아카데미 6기에 지원하기", text: $goal)
                 .textInputAutocapitalization(.never)
                 .disableAutocorrection(true)
                 .foregroundColor(.white)
+                .disabled(isLoading)
             Button {
                 Task {
+                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                     await generateGoals()
                 }
             } label: {
@@ -54,6 +57,5 @@ struct InputField: View {
         goal: .init(get: { "Hello" }, set: { _ in })
     )
 }
-
 
 
