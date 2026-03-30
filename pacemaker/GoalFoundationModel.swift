@@ -17,7 +17,7 @@ struct GoalPlan: Hashable & Codable {
 struct GoalPlanResponse: Hashable & Codable {
     @Guide(description: "sequential integer starting from 1")
     var id: Int
-    @Guide(description: "one clear and actionable subgoal in Korean")
+    @Guide(description: "one clear and actionable subgoal in Korean Make it short")
     var goal: String
     @Guide(description: "specific explanation in Korean including concrete actions, deliverables, or checkpoints")
     var description: String
