@@ -19,8 +19,6 @@ struct MainView: View {
   
   @State private var goalLevel: Int = 0
   @State private var isLoading: Bool = false
-  @State private var showGoalCard: Bool = false
-  
   
   private let client = FoundationModelClient(instruction: instruction)
   
@@ -32,14 +30,12 @@ struct MainView: View {
     previewSelectedGoal: GoalPlanResponse? = nil,
     previewGoalLevel: Int,
     previewIsLoading: Bool = false,
-    previewShowGoalCard: Bool = false
   ) {
     _goal = State(initialValue: previewGoal)
     _response = State(initialValue: previewResponse)
     _selectedGoal = State(initialValue: previewSelectedGoal)
     _goalLevel = State(initialValue: previewGoalLevel)
     _isLoading = State(initialValue: previewIsLoading)
-    _showGoalCard = State(initialValue: previewShowGoalCard)
   }
   
   var body: some View {
@@ -57,9 +53,11 @@ struct MainView: View {
             ) { index in
               GoalCard(
                 subgoal: subgoals[index],
-                disabled: false
+                disabled: index >= goalLevel
               ) {
-                selectedGoal = subgoals[index]
+                if index < goalLevel {
+                  selectedGoal = subgoals[index]
+                }
               }
             }.frame(
               height: 160,
@@ -70,9 +68,9 @@ struct MainView: View {
             SproutView(
               level: goalLevel,
               onTap: {
-                withAnimation(.spring(response: 0.45, dampingFraction: 0.82)) {
-                  showGoalCard.toggle()
-                }
+//                withAnimation(.spring(response: 0.45, dampingFraction: 0.82)) {
+//                  showGoalCard.toggle()
+//                }
               }
             )
           }
@@ -94,7 +92,7 @@ struct MainView: View {
         .background(.brown)
       }.navigationDestination(item: $selectedGoal) { goal in
         SubGoalView(subGoal: goal, onComplete:{
-          goalLevel+=1
+          goalLevel = goal.id + 1;
         })
       }
     }
@@ -160,6 +158,5 @@ struct MainView: View {
     previewGoal: "포트폴리오 만들기",
     previewResponse: mockPlan,
     previewGoalLevel: 1,
-    previewShowGoalCard: true
   )
 }
