@@ -55,7 +55,10 @@ struct MainView: View {
               visibleEdgeSpace: 10,
               spacing: 10
             ) { index in
-              GoalCard(subgoal: subgoals[index]) {
+              GoalCard(
+                subgoal: subgoals[index],
+                disabled: false
+              ) {
                 selectedGoal = subgoals[index]
               }
             }.frame(
