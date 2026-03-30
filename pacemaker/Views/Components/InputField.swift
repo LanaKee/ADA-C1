@@ -4,13 +4,15 @@
 //
 //  Created by Lanakee on 3/26/26.
 //
+
 import SwiftUI
-import UIKit
 
 struct InputField: View {
     let isLoading: Bool
     let generateGoals: () async -> Void
     @Binding var goal: String
+    
+    @FocusState private var isTextFieldFocused: Bool
     
     var body: some View {
         HStack(spacing: 10) {
@@ -19,9 +21,11 @@ struct InputField: View {
                 .disableAutocorrection(true)
                 .foregroundColor(.white)
                 .disabled(isLoading)
+                .focused($isTextFieldFocused)
+
             Button {
                 Task {
-                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                    isTextFieldFocused = false
                     await generateGoals()
                 }
             } label: {
