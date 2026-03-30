@@ -20,9 +20,22 @@ struct GoalCard: View {
         .clipShape(Capsule())
       
       VStack(alignment: .leading, spacing: 6) {
-        Text("\(subgoal.id) \(subgoal.goal)")
-          .font(.headline)
-          .padding(.bottom, 5)
+        HStack(alignment: .center) {
+          ZStack {
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+              .fill(Color.accentColor.opacity(0.15))
+              .frame(width: 32, height: 32)
+
+            Text("\(subgoal.id)")
+              .font(.title2.bold())
+              .foregroundStyle(Color.accentColor)
+          }
+          
+          Text(subgoal.goal)
+            .font(.headline.bold())
+
+          Spacer()
+        }
         
         Text(subgoal.description)
       }
@@ -35,12 +48,8 @@ struct GoalCard: View {
     .fixedSize(horizontal: false, vertical: true)
     .frame(maxWidth: .infinity, alignment: .leading)
     .padding()
-    .background(
-        RoundedRectangle(cornerRadius: 20)
-            .fill(colorScheme == .light ? .gray.opacity(0.07) : .gray.opacity(0.3))
-    )
+    .glassEffect(.regular, in: .rect(cornerRadius: 15))
     .shadow(radius: 10)
-    .padding(.horizontal, 20)
     .onTapGesture {
       onTap()
     }
@@ -55,5 +64,5 @@ struct GoalCard: View {
       description: "리이오와 밥을 먹으세요"
     ),
     onTap: {}
-  )
+  ).padding(20)
 }
