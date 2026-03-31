@@ -145,16 +145,7 @@ struct MainView: View {
         .background(.brown)
       }
       .background(
-        LinearGradient(
-          colors: [
-            Color(red: 0.40, green: 0.70, blue: 0.95),
-            Color(red: 0.53, green: 0.81, blue: 0.98),
-            Color(red: 0.72, green: 0.90, blue: 1.0),
-            Color(red: 0.88, green: 0.96, blue: 1.0)
-          ],
-          startPoint: .top,
-          endPoint: .bottom
-        )
+        DayViewReduced()
       )
       .navigationDestination(item: $selectedGoal) { goal in
         SubGoalView(subGoal: goal, onComplete: {
