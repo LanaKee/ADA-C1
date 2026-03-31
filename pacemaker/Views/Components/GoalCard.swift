@@ -80,9 +80,9 @@ struct GoalCard: View {
       .padding()
       .glassEffect(.regular, in: .rect(cornerRadius: 15))
       .shadow(radius: 10)
-      .onTapGesture {
+      .simultaneousGesture(TapGesture().onEnded {
         onTap()
-      }
+      })
       if disabled {
         VStack (spacing: 0) {
           Image(systemName: "lock.fill")

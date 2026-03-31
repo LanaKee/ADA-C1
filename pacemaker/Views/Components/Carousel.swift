@@ -55,7 +55,7 @@ struct Carousel<Content: View>: View {
       }
       .contentShape(Rectangle())
       .gesture(
-        DragGesture()
+        DragGesture(minimumDistance: 15, coordinateSpace: .local)
           .updating($dragOffset) { value, out, _ in
             out = value.translation.width
           }
