@@ -53,14 +53,7 @@ struct Carousel<Content: View>: View {
             )
         }
       }
-      .offset(x: offsetX)
-      .animation(.interpolatingSpring(stiffness: 300, damping: 30), value: currentIndex)
-      .animation(.interpolatingSpring(stiffness: 300, damping: 30), value: dragOffset)
-      .frame(
-        width: proxy.size.width,
-        height: proxy.size.height,
-        alignment: .topLeading
-      )
+      .contentShape(Rectangle())
       .gesture(
         DragGesture()
           .updating($dragOffset) { value, out, _ in
@@ -82,6 +75,14 @@ struct Carousel<Content: View>: View {
 
             currentIndex = max(min(currentIndex + increment, pageCount - 1), 0)
           }
+      )
+      .offset(x: offsetX)
+      .animation(.interpolatingSpring(stiffness: 300, damping: 30), value: currentIndex)
+      .animation(.interpolatingSpring(stiffness: 300, damping: 30), value: dragOffset)
+      .frame(
+        width: proxy.size.width,
+        height: proxy.size.height,
+        alignment: .topLeading
       )
     }
   }
