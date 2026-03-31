@@ -66,16 +66,22 @@ struct SubGoalView: View {
           
 
             if isLoadingTips {
-              HStack {
-                Spacer()
-                ProgressView()
-                  .tint(.white)
-                Text("팁을 만들고 있어요...")
-                  .font(.subheadline)
-                  .foregroundStyle(.secondary)
-                Spacer()
+              ForEach(0..<3, id: \.self) { _ in
+                VStack(alignment: .leading, spacing: 10) {
+                  RoundedRectangle(cornerRadius: 6)
+                    .fill(.white.opacity(0.15))
+                    .frame(height: 14)
+                    .frame(maxWidth: .infinity)
+                  RoundedRectangle(cornerRadius: 6)
+                    .fill(.white.opacity(0.15))
+                    .frame(height: 14)
+                    .frame(width: 180)
+                }
+                .padding(16)
+                .glassEffect(.regular, in: .rect(cornerRadius: 16))
+                .padding(.horizontal, 10)
+                .shimmering()
               }
-              .padding(.vertical, 20)
             } else {
               ForEach(Array(tips.enumerated()), id: \.offset) { index, tip in
                 VStack(alignment: .leading, spacing: 0) {
