@@ -89,17 +89,17 @@ struct MainView: View {
                 }
               }
               .padding(.vertical, 20)
-              Button {
-                displayPhase = .carousel
-              } label: {
-                Label("다음단계로", systemImage: "arrow.right")
-                  .frame(maxWidth: .infinity)
-                  .padding(.vertical, 14)
-              }
-              .buttonStyle(.glassProminent)
-              .padding(.horizontal, 16)
-              .padding(.bottom, 20)
             }
+            Button {
+              displayPhase = .carousel
+            } label: {
+              Label("다음단계로", systemImage: "arrow.right")
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 14)
+            }
+            .buttonStyle(.glassProminent)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 20)
           }
           
         case .carousel:
