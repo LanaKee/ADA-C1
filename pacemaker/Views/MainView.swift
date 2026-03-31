@@ -22,7 +22,7 @@ struct MainView: View {
   @State private var selectedIndex: Int = 0
   
   @State private var isLoading: Bool = false
-  @State private var displayPhase: GoalDisplayPhase = .input
+  @State private var displayPhase: GoalDisplayPhaseEnum = .input
   
   private let client = FoundationModelClient(instruction: instruction)
   
@@ -34,7 +34,7 @@ struct MainView: View {
     previewSelectedGoal: GoalPlanResponse? = nil,
     previewGoalLevel: Int,
     previewIsLoading: Bool = false,
-    previewDisplayPhase: GoalDisplayPhase = .input
+    previewDisplayPhase: GoalDisplayPhaseEnum = .input
   ) {
     _goal = State(initialValue: previewGoal)
     _response = State(initialValue: previewResponse)
