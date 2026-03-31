@@ -69,10 +69,13 @@ struct MainView: View {
         case .listPreview:
           if let subgoals = response?.subgoals, !subgoals.isEmpty {
             Text("미션")
-              .font(.memom)
+              .font(.memom(.largeTitle))
               .foregroundStyle(.white)
+              .padding(.top, 16)
             Text("목표를 이루기 위해 5단계로 쪼개봤어요")
-              .padding(.bottom, 16)
+              .font(.memom(.subheadline))
+              .foregroundStyle(.secondary)
+              .padding(.bottom, 8)
             ScrollView {
               VStack(spacing: 12) {
                 ForEach(subgoals, id: \.id) { subgoal in

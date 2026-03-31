@@ -13,9 +13,12 @@ struct Loading: View {
     VStack(spacing: 12) {
       Spacer ()
       ProgressView()
+        .foregroundStyle(.white)
+        .shadow(color: .gray, radius: 4)
       Text(message)
         .font(.subheadline)
-        .foregroundStyle(.secondary)
+        .foregroundStyle(.white)
+        .shadow(color: .gray, radius: 4)
       Spacer ()
     }
     .padding(.top, 20)
