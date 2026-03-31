@@ -134,6 +134,48 @@ struct MainView: View {
         .padding(.vertical, 20)
         .background(.brown)
       }
+      .background(
+        ZStack {
+          LinearGradient(
+            colors: [
+              Color(red: 0.40, green: 0.70, blue: 0.95),
+              Color(red: 0.53, green: 0.81, blue: 0.98),
+              Color(red: 0.72, green: 0.90, blue: 1.0),
+              Color(red: 0.88, green: 0.96, blue: 1.0)
+            ],
+            startPoint: .top,
+            endPoint: .bottom
+          )
+
+          // Clouds
+          GeometryReader { geo in
+            Ellipse()
+              .fill(.white.opacity(0.5))
+              .frame(width: 180, height: 40)
+              .blur(radius: 15)
+              .offset(x: geo.size.width * 0.55, y: geo.size.height * 0.08)
+
+            Ellipse()
+              .fill(.white.opacity(0.4))
+              .frame(width: 140, height: 30)
+              .blur(radius: 12)
+              .offset(x: geo.size.width * 0.1, y: geo.size.height * 0.18)
+
+            Ellipse()
+              .fill(.white.opacity(0.35))
+              .frame(width: 200, height: 35)
+              .blur(radius: 14)
+              .offset(x: geo.size.width * 0.35, y: geo.size.height * 0.35)
+
+            Ellipse()
+              .fill(.white.opacity(0.3))
+              .frame(width: 120, height: 25)
+              .blur(radius: 10)
+              .offset(x: geo.size.width * 0.7, y: geo.size.height * 0.55)
+          }
+        }
+        .ignoresSafeArea()
+      )
       .navigationDestination(item: $selectedGoal) { goal in
         SubGoalView(subGoal: goal, onComplete: {
           goalLevel = goal.id + 1

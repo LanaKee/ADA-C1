@@ -79,9 +79,6 @@ struct GoalCard: View {
       .frame(maxWidth: .infinity, alignment: .leading)
       .padding()
       .glassEffect(.regular, in: .rect(cornerRadius: 15))
-      .background(
-        
-      )
       .shadow(radius: 10)
       .onTapGesture {
         onTap()
