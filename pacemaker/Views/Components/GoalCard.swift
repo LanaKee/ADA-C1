@@ -50,7 +50,7 @@ struct GoalCard: View {
             .foregroundStyle(.secondary)
         }
       }
-      .blur(radius: (disabled ? 3 : 0))
+      .blur(radius: (disabled ? 5 : 0))
       .fixedSize(horizontal: false, vertical: true)
       .frame(maxWidth: .infinity, alignment: .leading)
       .padding()
@@ -60,9 +60,14 @@ struct GoalCard: View {
         onTap()
       }
       if disabled {
-        Image(systemName: "lock.fill")
-          .font(.system(size: 32))
-          .padding()
+        VStack (spacing: 0) {
+          Image(systemName: "lock.fill")
+            .font(.system(size: 24))
+            .padding(.bottom, 10)
+            .shadow(radius: 10)
+          Text("이전 목표를 완료하고 확인해 보세요")
+            .font(.headline.bold())
+        }
       }
     }
   }

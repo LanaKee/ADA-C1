@@ -10,9 +10,9 @@ import SwiftUI
 struct SubGoalView: View {
   let subGoal: GoalPlanResponse?
   let onComplete: () -> Void
-
+  
   @Environment(\.dismiss) private var dismiss
-
+  
   var body: some View {
     NavigationStack {
       VStack {
@@ -22,22 +22,22 @@ struct SubGoalView: View {
               RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .fill(Color.accentColor.opacity(0.15))
                 .frame(width: 56, height: 56)
-
+              
               Text("\(subGoal?.id ?? 0)")
                 .font(.title2.bold())
                 .foregroundStyle(Color.accentColor)
             }
             .padding(.horizontal, 30)
             .padding(.top, 20)
-
+            
             Spacer()
           }
-
+          
           Text(subGoal?.goal ?? "불러오는중")
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, 30)
             .font(.title2.bold())
-
+          
           Text(subGoal?.description ?? "설명이 없어요")
             .frame(maxWidth: .infinity, alignment: .leading)
             .font(.subheadline)
@@ -57,7 +57,7 @@ struct SubGoalView: View {
         .buttonStyle(.glass)
         .tint(.green)
         .padding(10)
-
+        
         Spacer()
       }
       .navigationTitle(subGoal?.goal ?? "로딩중...")

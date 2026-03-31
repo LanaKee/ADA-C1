@@ -18,7 +18,10 @@ struct MainView: View {
   @State private var selectedGoal: GoalPlanResponse?
   
   @State private var goalLevel: Int = 0
+  @State private var selectedIndex: Int = 0
   @State private var isLoading: Bool = false
+  
+  @State private var currentPage: Int = 0
   
   private let client = FoundationModelClient(instruction: instruction)
   
@@ -41,15 +44,26 @@ struct MainView: View {
   var body: some View {
     NavigationStack{
       VStack(spacing: 0) {
+        if isLoading {
+          VStack(spacing: 12) {
+            Spacer ()
+            ProgressView()
+            Text("목표를 작은 단계로 나누고 있어요...")
+              .font(.subheadline)
+              .foregroundStyle(.secondary)
+            Spacer ()
+          }
+          .padding(.top, 20)
+        }
         if goalLevel > 0 {
           if let subgoals = response?.subgoals,
              !subgoals.isEmpty,
              subgoals.indices.contains(goalLevel - 1) {
-            
             Carousel(
               pageCount: subgoals.count,
               visibleEdgeSpace: 10,
-              spacing: 10
+              spacing: 10,
+              currentIndex: $currentPage
             ) { index in
               GoalCard(
                 subgoal: subgoals[index],
@@ -59,24 +73,26 @@ struct MainView: View {
                   selectedGoal = subgoals[index]
                 }
               }
-            }.frame(
-              height: 160,
-              alignment: .top)
-
+            }
+            
             Spacer()
-
+            
             SproutView(
               level: goalLevel,
               onTap: {
-//                withAnimation(.spring(response: 0.45, dampingFraction: 0.82)) {
-//                  showGoalCard.toggle()
-//                }
               }
             )
           }
         } else {
           Spacer()
         }
+        //        if goalLevel <= 0 {
+        //          Text("목표 설정하기")
+        //            .font(.title)
+        //          Text("아래의 상자에 목표를 적고 버튼을 눌러주세요")
+        //            .padding(.bottom, 40)
+        //        }
+        
         VStack {
           if goalLevel > 0 {
             Text(goal)
@@ -90,9 +106,11 @@ struct MainView: View {
         }
         .padding(.vertical, 20)
         .background(.brown)
+        
       }.navigationDestination(item: $selectedGoal) { goal in
         SubGoalView(subGoal: goal, onComplete:{
           goalLevel = goal.id + 1;
+          currentPage = goal.id
         })
       }
     }
@@ -120,7 +138,9 @@ struct MainView: View {
 }
 
 #Preview("초기 입력 상태") {
-  MainView()
+  MainView(
+
+  )
 }
 
 #Preview("캐러셀 표시 상태") {
@@ -153,10 +173,12 @@ struct MainView: View {
   ]
   
   let mockPlan = GoalPlan(subgoals: mockSubgoals)
-  
   return MainView(
     previewGoal: "포트폴리오 만들기",
     previewResponse: mockPlan,
     previewGoalLevel: 1,
+
   )
 }
+
+

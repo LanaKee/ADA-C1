@@ -14,20 +14,24 @@ struct Carousel<Content: View>: View {
   let visibleEdgeSpace: CGFloat
   let spacing: CGFloat
   let content: (PageIndex) -> Content
+  @Binding var currentIndex: Int
 
   @GestureState private var dragOffset: CGFloat = 0
-  @State private var currentIndex: Int = 0
+
 
   init(
     pageCount: Int,
     visibleEdgeSpace: CGFloat,
     spacing: CGFloat,
-    @ViewBuilder content: @escaping (PageIndex) -> Content
+    @ViewBuilder content: @escaping (PageIndex) -> Content,
+    currentIndex: Binding<Int> = .constant(0)
+    
   ) {
     self.pageCount = pageCount
     self.visibleEdgeSpace = visibleEdgeSpace
     self.spacing = spacing
     self.content = content
+    self._currentIndex = currentIndex
   }
 
   var body: some View {
@@ -80,5 +84,28 @@ struct Carousel<Content: View>: View {
           }
       )
     }
+  }
+}
+
+
+
+#Preview {
+  VStack {
+    Spacer()
+
+    Carousel(pageCount: 5, visibleEdgeSpace: 40, spacing: 12) { index in
+      RoundedRectangle(cornerRadius: 16)
+        .fill(.blue)
+        .frame(height: 120 + CGFloat(index) * 50)
+        .overlay {
+          Text("Page \(index)")
+            .font(.title)
+            .bold()
+            .foregroundColor(.white)
+        }
+    }
+    .padding(.horizontal, 20)
+
+    Spacer()
   }
 }

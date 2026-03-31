@@ -16,7 +16,7 @@ struct InputField: View {
     
     var body: some View {
         HStack(spacing: 10) {
-            TextField("아카데미 6기에 지원하기", text: $goal)
+            TextField("이루고 싶은 목표를 간략하게 입력해주세요", text: $goal)
                 .textInputAutocapitalization(.never)
                 .disableAutocorrection(true)
                 .foregroundColor(.white)
