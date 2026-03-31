@@ -72,10 +72,6 @@ struct SubGoalView: View {
                     .fill(.white.opacity(0.15))
                     .frame(height: 14)
                     .frame(maxWidth: .infinity)
-                  RoundedRectangle(cornerRadius: 6)
-                    .fill(.white.opacity(0.15))
-                    .frame(height: 14)
-                    .frame(width: 180)
                 }
                 .padding(16)
                 .glassEffect(.regular, in: .rect(cornerRadius: 16))

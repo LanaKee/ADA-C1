@@ -67,10 +67,12 @@ struct Carousel<Content: View>: View {
             let predictedProgress = -predictedOffset / pageWidth
 
             let increment: Int
-            if abs(predictedProgress) > 0.5 {
+            if abs(progress) > 0.3 {
+              increment = progress > 0 ? 1 : -1
+            } else if abs(predictedProgress) > 0.3 {
               increment = predictedProgress > 0 ? 1 : -1
             } else {
-              increment = Int(progress.rounded())
+              increment = 0
             }
 
             currentIndex = max(min(currentIndex + increment, pageCount - 1), 0)
