@@ -7,18 +7,37 @@
 
 import SwiftUI
 
+enum GoalCardStatus {
+  case normal
+  case completed
+  case inProgress
+}
+
+
 struct GoalCard: View {
   @Environment(\.colorScheme) private var colorScheme
   
   var subgoal: GoalPlanResponse
   let disabled: Bool
   let onTap: () -> Void
+  let status: GoalCardStatus
   
+  private var statusColor: Color {
+    switch status {
+    case .normal:
+      return .accentColor
+    case .completed:
+      return .green
+    case .inProgress:
+      return .blue
+    }
+  }
+
   var body: some View {
     ZStack {
       HStack(alignment: .top, spacing: 12) {
         Rectangle()
-          .fill(.accent)
+          .fill(statusColor)
           .frame(width: 3)
           .clipShape(Capsule())
         
@@ -26,12 +45,17 @@ struct GoalCard: View {
           HStack(alignment: .center) {
             ZStack {
               RoundedRectangle(cornerRadius: 8, style: .continuous)
-                .fill(Color.accentColor.opacity(0.15))
+                .fill(statusColor.opacity(0.15))
                 .frame(width: 32, height: 32)
               
-              Text("\(subgoal.id)")
-                .font(.title2.bold())
-                .foregroundStyle(Color.accentColor)
+              switch status {
+              case .normal:
+                Text("\(subgoal.id)")
+              case .completed:
+                Image(systemName: "checkmark")
+              case .inProgress:
+                Text("\(subgoal.id)")
+              }
             }
             
             Text(subgoal.goal)
@@ -55,6 +79,9 @@ struct GoalCard: View {
       .frame(maxWidth: .infinity, alignment: .leading)
       .padding()
       .glassEffect(.regular, in: .rect(cornerRadius: 15))
+      .background(
+        
+      )
       .shadow(radius: 10)
       .onTapGesture {
         onTap()
@@ -73,24 +100,55 @@ struct GoalCard: View {
   }
 }
 
-#Preview {
-  GoalCard(
-    subgoal: GoalPlanResponse(
-      id: 1,
-      goal: "Swift UI를 공부하세요",
-      description: "리이오와 밥을 먹으세요"
-    ),
-    disabled: false,
-    onTap: {},
+#Preview ("상태별") {
+  VStack(spacing: 20) {
+    GoalCard(
+      subgoal: GoalPlanResponse(
+        id: 1,
+        goal: "Swift UI를 공부하세요",
+        description: "리이오와 밥을 먹으세요"
+      ),
+      disabled: false,
+      onTap: {},
+      status: .normal
+    )
 
-  ).padding(20)
+    GoalCard(
+      subgoal: GoalPlanResponse(
+        id: 2,
+        goal: "Swift UI를 공부하세요",
+        description: "리이오와 밥을 먹으세요"
+      ),
+      disabled: false,
+      onTap: {},
+      status: .inProgress
+    )
+
+    GoalCard(
+      subgoal: GoalPlanResponse(
+        id: 3,
+        goal: "Swift UI를 공부하세요",
+        description: "리이오와 밥을 먹으세요"
+      ),
+      disabled: false,
+      onTap: {},
+      status: .completed
+    )
+  }
+  .padding(20)
+}
+
+#Preview ("비활성화") {
   GoalCard(
     subgoal: GoalPlanResponse(
-      id: 1,
+      id: 4,
       goal: "Swift UI를 공부하세요",
       description: "리이오와 밥을 먹으세요"
     ),
     disabled: true,
-    onTap: {}
+    onTap: {},
+    status: .normal
   ).padding(20)
 }
+
+
