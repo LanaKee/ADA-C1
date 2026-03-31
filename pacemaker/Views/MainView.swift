@@ -148,10 +148,14 @@ struct MainView: View {
         DayViewReduced()
       )
       .navigationDestination(item: $selectedGoal) { goal in
-        SubGoalView(subGoal: goal, onComplete: {
-          goalLevel = goal.id + 1
-          currentPage = goal.id
-        })
+        SubGoalView(
+          subGoal: goal,
+          allSubgoals: response?.subgoals ?? [],
+          onComplete: {
+            goalLevel = goal.id + 1
+            currentPage = goal.id
+          }
+        )
       }
     }
   }
