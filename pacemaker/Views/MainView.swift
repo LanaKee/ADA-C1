@@ -54,19 +54,25 @@ struct MainView: View {
         
         switch displayPhase {
         case .input:
-          Spacer()
           if !isLoading {
+            Spacer()
             InputField(
               icon: "arrow.up",
               isLoading: isLoading,
               generateGoals: generateGoals,
               goal: $goal,
             )
+            Spacer()
           }
           
           
         case .listPreview:
           if let subgoals = response?.subgoals, !subgoals.isEmpty {
+            Text("미션")
+              .font(.memom)
+              .foregroundStyle(.white)
+            Text("목표를 이루기 위해 5단계로 쪼개봤어요")
+              .padding(.bottom, 16)
             ScrollView {
               VStack(spacing: 12) {
                 ForEach(subgoals, id: \.id) { subgoal in
@@ -101,17 +107,18 @@ struct MainView: View {
               pageCount: subgoals.count,
               visibleEdgeSpace: 10,
               spacing: 10,
-              currentIndex: $currentPage
-            ) { index in
-              GoalCard(
-                subgoal: subgoals[index],
-                disabled: false, // index >= goalLevel,
-                onTap:{                if index < goalLevel {
-                  selectedGoal = subgoals[index]
-                }},status: .normal
-                
-              )
-            }
+              content:  { index in
+                GoalCard(
+                  subgoal: subgoals[index],
+                  disabled: false, // index >= goalLevel,
+                  onTap:{
+                    if index < goalLevel {
+                    selectedGoal = subgoals[index]
+                  }}
+                  ,status: .normal
+                )
+              }, currentIndex: $currentPage)
+            .padding(.top, 10)
             
             Spacer()
             
@@ -135,46 +142,16 @@ struct MainView: View {
         .background(.brown)
       }
       .background(
-        ZStack {
-          LinearGradient(
-            colors: [
-              Color(red: 0.40, green: 0.70, blue: 0.95),
-              Color(red: 0.53, green: 0.81, blue: 0.98),
-              Color(red: 0.72, green: 0.90, blue: 1.0),
-              Color(red: 0.88, green: 0.96, blue: 1.0)
-            ],
-            startPoint: .top,
-            endPoint: .bottom
-          )
-
-          // Clouds
-          GeometryReader { geo in
-            Ellipse()
-              .fill(.white.opacity(0.5))
-              .frame(width: 180, height: 40)
-              .blur(radius: 15)
-              .offset(x: geo.size.width * 0.55, y: geo.size.height * 0.08)
-
-            Ellipse()
-              .fill(.white.opacity(0.4))
-              .frame(width: 140, height: 30)
-              .blur(radius: 12)
-              .offset(x: geo.size.width * 0.1, y: geo.size.height * 0.18)
-
-            Ellipse()
-              .fill(.white.opacity(0.35))
-              .frame(width: 200, height: 35)
-              .blur(radius: 14)
-              .offset(x: geo.size.width * 0.35, y: geo.size.height * 0.35)
-
-            Ellipse()
-              .fill(.white.opacity(0.3))
-              .frame(width: 120, height: 25)
-              .blur(radius: 10)
-              .offset(x: geo.size.width * 0.7, y: geo.size.height * 0.55)
-          }
-        }
-        .ignoresSafeArea()
+        LinearGradient(
+          colors: [
+            Color(red: 0.40, green: 0.70, blue: 0.95),
+            Color(red: 0.53, green: 0.81, blue: 0.98),
+            Color(red: 0.72, green: 0.90, blue: 1.0),
+            Color(red: 0.88, green: 0.96, blue: 1.0)
+          ],
+          startPoint: .top,
+          endPoint: .bottom
+        )
       )
       .navigationDestination(item: $selectedGoal) { goal in
         SubGoalView(subGoal: goal, onComplete: {
