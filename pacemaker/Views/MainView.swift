@@ -8,6 +8,11 @@
 import SwiftUI
 import FoundationModels
 
+enum ViewMode {
+  case carousel
+  case list
+}
+
 struct MainView: View {
   @Environment(\.colorScheme) var colorScheme
   @FocusState private var isFocused
@@ -23,6 +28,8 @@ struct MainView: View {
   
   @State private var isLoading: Bool = false
   @State private var displayPhase: GoalDisplayPhaseEnum = .input
+  
+  @State private var currentView: ViewMode = .carousel
   
   private let client = FoundationModelClient(instruction: instruction)
   
@@ -47,7 +54,7 @@ struct MainView: View {
   var body: some View {
     NavigationStack {
       VStack(spacing: 0) {
-        if isLoading && displayPhase != .listPreview {
+        if isLoading && displayPhase != .list {
           Loading(message: "목표를 작은 단계로 나누고 있어요...")
         }
         
@@ -65,7 +72,7 @@ struct MainView: View {
           }
           
           
-        case .listPreview:
+        case .list:
           if let subgoals = response?.subgoals, !subgoals.isEmpty {
             Text("미션")
               .font(.memom(.largeTitle))
@@ -89,16 +96,16 @@ struct MainView: View {
               }
               .padding(.vertical, 20)
             }
-            Button {
-              displayPhase = .carousel
-            } label: {
-              Label("다음단계로", systemImage: "arrow.right")
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 14)
-            }
-            .buttonStyle(.glassProminent)
-            .padding(.horizontal, 16)
-            .padding(.vertical, 20)
+            //            Button {
+            //              displayPhase = .carousel
+            //            } label: {
+            //              Label("다음단계로", systemImage: "arrow.right")
+            //                .frame(maxWidth: .infinity)
+            //                .padding(.vertical, 14)
+            //            }
+            //            .buttonStyle(.glassProminent)
+            //            .padding(.horizontal, 16)
+            //            .padding(.vertical, 20)
           }
           
         case .carousel:
@@ -115,8 +122,8 @@ struct MainView: View {
                   disabled: false, // index >= goalLevel,
                   onTap:{
                     if index < goalLevel {
-                    selectedGoal = subgoals[index]
-                  }}
+                      selectedGoal = subgoals[index]
+                    }}
                   ,status: .normal
                 )
               }, currentIndex: $currentPage)
@@ -156,6 +163,24 @@ struct MainView: View {
           }
         )
       }
+      .toolbar {
+        if displayPhase != .input {
+          ToolbarItem(placement: .topBarLeading) {
+            Button("Mode Change", systemImage: displayPhase == .carousel ? "list.bullet": "check") {
+              withAnimation(.easeInOut(duration: 0.3)) {
+                switch displayPhase {
+                case .carousel:
+                  displayPhase = .list
+                case .list:
+                  displayPhase = .carousel
+                default:
+                  break
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
   
@@ -174,7 +199,7 @@ struct MainView: View {
       currentPage = 0
       
       withAnimation(.easeInOut(duration: 0.3)) {
-        displayPhase = .listPreview
+        displayPhase = .list
       }
       
     case .failure:
@@ -244,7 +269,7 @@ struct MainView: View {
     previewGoal: "포트폴리오 만들기",
     previewResponse: mockPlan,
     previewGoalLevel: 1,
-    previewDisplayPhase: .listPreview
+    previewDisplayPhase: .list
   )
 }
 
