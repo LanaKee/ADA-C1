@@ -38,7 +38,7 @@ struct TipSkeleton: View {
 
       withAnimation(
         .linear(duration: 1.5)
-        .repeatForever(autoreverses: true)
+        .repeatForever(autoreverses: false)
       ) {
         phase = 1
       }
