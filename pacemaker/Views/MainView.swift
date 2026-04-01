@@ -89,23 +89,23 @@ struct MainView: View {
                     subgoal: subgoal,
                     disabled: false,
                     onTap: {selectedGoal = subgoal},
-                    status: .normal
+                    status: goalLevel > subgoal.id ? .completed : .normal
                   )
                   .padding(.horizontal, 16)
                 }
               }
               .padding(.vertical, 20)
             }
-            //            Button {
-            //              displayPhase = .carousel
-            //            } label: {
-            //              Label("다음단계로", systemImage: "arrow.right")
-            //                .frame(maxWidth: .infinity)
-            //                .padding(.vertical, 14)
-            //            }
-            //            .buttonStyle(.glassProminent)
-            //            .padding(.horizontal, 16)
-            //            .padding(.vertical, 20)
+            Button {
+              displayPhase = .carousel
+            } label: {
+              Label("나무 키우러 가기", systemImage: "arrow.right")
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 14)
+            }
+            .buttonStyle(.glassProminent)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 20)
           }
           
         case .carousel:
@@ -120,11 +120,8 @@ struct MainView: View {
                 GoalCard(
                   subgoal: subgoals[index],
                   disabled: false, // index >= goalLevel,
-                  onTap:{
-                    if index < goalLevel {
-                      selectedGoal = subgoals[index]
-                    }}
-                  ,status: .normal
+                  onTap:{selectedGoal = subgoals[index]},
+                  status: goalLevel > subgoals[index].id ? .completed : .normal
                 )
               }, currentIndex: $currentPage)
             .padding(.top, 10)
@@ -166,7 +163,7 @@ struct MainView: View {
       .toolbar {
         if displayPhase != .input {
           ToolbarItem(placement: .topBarLeading) {
-            Button("Mode Change", systemImage: displayPhase == .carousel ? "list.bullet": "check") {
+            Button("Mode Change", systemImage: displayPhase == .carousel ? "list.bullet": "text.rectangle") {
               withAnimation(.easeInOut(duration: 0.3)) {
                 switch displayPhase {
                 case .carousel:

@@ -36,27 +36,26 @@ struct GoalCard: View {
   var body: some View {
     ZStack {
       HStack(alignment: .top, spacing: 12) {
-//        Rectangle()
-//          .fill(.accent)
-//          .frame(width: 3)
-//          .clipShape(Capsule())
+        //        Rectangle()
+        //          .fill(.accent)
+        //          .frame(width: 3)
+        //          .clipShape(Capsule())
         
         VStack(alignment: .leading, spacing: 6) {
           HStack(alignment: .center) {
             ZStack {
               RoundedRectangle(cornerRadius: 8, style: .continuous)
-                .fill(.accent.opacity(0.3))
+                .fill(colorScheme == .light ? .accent.opacity(0.5) : .accent.opacity(0.3))
                 .frame(width: 32, height: 32)
               
-//              switch status {
-//              case .normal:
-//                Text("\(subgoal.id)")
-//              case .completed:
-//                Image(systemName: "checkmark")
-//              case .inProgress:
-//                Text("\(subgoal.id)")
-//              }
-              Text("\(subgoal.id)")
+              switch status {
+              case .normal:
+                Text("\(subgoal.id)")
+              case .completed:
+                Image(systemName: "checkmark")
+              case .inProgress:
+                Text("\(subgoal.id)")
+              }
             }
             
             Text(subgoal.goal)
@@ -75,28 +74,29 @@ struct GoalCard: View {
             .foregroundStyle(.secondary)
         }
       }
-      .blur(radius: (disabled ? 5 : 0))
+      // .blur(radius: (disabled ? 5 : 0))
       .fixedSize(horizontal: false, vertical: true)
       .frame(maxWidth: .infinity, alignment: .leading)
       .padding()
-//      .background(status == .completed ? .accent.opacity(0.3) : .gray.opacity(0))
-      .background(.accent.opacity(0.3))
+      .background(status == .completed ? colorScheme == .light ? .accent.opacity(0.4) : .accent.opacity(0.3) : .gray.opacity(0))
       .cornerRadius(15)
       .glassEffect(.regular, in: .rect(cornerRadius: 15))
       .shadow(radius: 10)
       .simultaneousGesture(TapGesture().onEnded {
-        onTap()
-      })
-      if disabled {
-        VStack (spacing: 0) {
-          Image(systemName: "lock.fill")
-            .font(.system(size: 24))
-            .padding(.bottom, 10)
-            .shadow(radius: 10)
-          Text("이전 목표를 완료하고 확인해 보세요")
-            .font(.headline.bold())
+        if !disabled {
+          onTap()
         }
-      }
+      })
+      //      if disabled {
+      //        VStack (spacing: 0) {
+      //          Image(systemName: "lock.fill")
+      //            .font(.system(size: 24))
+      //            .padding(.bottom, 10)
+      //            .shadow(radius: 10)
+      //          Text("이전 목표를 완료하고 확인해 보세요")
+      //            .font(.headline.bold())
+      //        }
+      //      }
     }
   }
 }
