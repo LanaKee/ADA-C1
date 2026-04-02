@@ -99,7 +99,7 @@ struct MainView: View {
             Button {
               displayPhase = .carousel
             } label: {
-              Label("나무 키우러 가기", systemImage: "arrow.right")
+              Label("시작하기", systemImage: "arrow.right")
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 14)
             }
