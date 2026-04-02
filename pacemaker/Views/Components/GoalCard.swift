@@ -53,6 +53,7 @@ struct GoalCard: View {
                 Text("\(subgoal.id)")
               case .completed:
                 Image(systemName: "checkmark")
+                  .foregroundStyle(.accent)
               case .inProgress:
                 Text("\(subgoal.id)")
               }

@@ -135,16 +135,9 @@ struct MainView: View {
             )
           }
         }
-        VStack {
-          
-          Text(goalLevel > 0  ? goal : "")
-            .bold()
-            .foregroundStyle(.white)
-            .font(.title2)
-            .frame(maxWidth: .infinity, alignment: .center)
-          
-        }
-        .padding(.vertical, 20)
+        VStack{}
+        .frame(maxWidth: .infinity, alignment: .center)
+        .padding(.vertical, 30)
         .background(.brown)
       }
       .background(
