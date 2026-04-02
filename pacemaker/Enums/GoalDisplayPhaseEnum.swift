@@ -7,6 +7,7 @@
 
 enum GoalDisplayPhaseEnum {
   case input
+  case initialList
   case list
   case carousel
 }

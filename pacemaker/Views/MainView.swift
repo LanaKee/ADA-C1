@@ -54,7 +54,7 @@ struct MainView: View {
   var body: some View {
     NavigationStack {
       VStack(spacing: 0) {
-        if isLoading && displayPhase != .list {
+        if isLoading && displayPhase != .list && displayPhase != .initialList {
           Loading(message: "목표를 작은 단계로 나누고 있어요...")
         }
         if displayPhase != .input {
@@ -78,36 +78,15 @@ struct MainView: View {
           }
           
           
-        case .list:
+        case .initialList, .list:
           if let subgoals = response?.subgoals, !subgoals.isEmpty {
-            Text("목표를 쉽게 이룰 수 있도록 5단계로 쪼개봤어요")
-              .font(.memom(.subheadline))
-              .foregroundStyle(.secondary)
-              .padding(.bottom, 8)
-            ScrollView {
-              VStack(spacing: 12) {
-                ForEach(subgoals, id: \.id) { subgoal in
-                  GoalCard(
-                    subgoal: subgoal,
-                    disabled: false,
-                    onTap: {selectedGoal = subgoal},
-                    status: goalLevel > subgoal.id ? .completed : .normal
-                  )
-                  .padding(.horizontal, 16)
-                }
-              }
-              .padding(.vertical, 20)
-            }
-            Button {
-              displayPhase = .carousel
-            } label: {
-              Label("시작하기", systemImage: "arrow.right")
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 14)
-            }
-            .buttonStyle(.glassProminent)
-            .padding(.horizontal, 16)
-            .padding(.vertical, 20)
+            ListView(
+              subgoals: subgoals,
+              goalLevel: goalLevel,
+              showStartButton: displayPhase == .initialList,
+              selectedGoal: $selectedGoal,
+              displayPhase: $displayPhase
+            )
           }
           
         case .carousel:
@@ -156,7 +135,7 @@ struct MainView: View {
         )
       }
       .toolbar {
-        if displayPhase != .input {
+        if displayPhase == .carousel || displayPhase == .list {
           ToolbarItem(placement: .topBarLeading) {
             Button("Mode Change", systemImage: displayPhase == .carousel ? "list.bullet": "text.rectangle") {
               withAnimation(.easeInOut(duration: 0.3)) {
@@ -191,7 +170,7 @@ struct MainView: View {
       currentPage = 0
       
       withAnimation(.easeInOut(duration: 0.3)) {
-        displayPhase = .list
+        displayPhase = .initialList
       }
       
     case .failure:
@@ -261,7 +240,7 @@ struct MainView: View {
     previewGoal: "포트폴리오 만들기",
     previewResponse: mockPlan,
     previewGoalLevel: 1,
-    previewDisplayPhase: .list
+    previewDisplayPhase: .initialList
   )
 }
 
