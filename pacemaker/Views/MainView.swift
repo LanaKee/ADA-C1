@@ -57,6 +57,12 @@ struct MainView: View {
         if isLoading && displayPhase != .list {
           Loading(message: "목표를 작은 단계로 나누고 있어요...")
         }
+        if displayPhase != .input {
+          Text(goal)
+            .font(.memom(.largeTitle))
+            .foregroundStyle(.white)
+            .padding(.top, 16)
+        }
         
         switch displayPhase {
         case .input:
@@ -74,11 +80,7 @@ struct MainView: View {
           
         case .list:
           if let subgoals = response?.subgoals, !subgoals.isEmpty {
-            Text("미션")
-              .font(.memom(.largeTitle))
-              .foregroundStyle(.white)
-              .padding(.top, 16)
-            Text("목표를 이루기 위해 5단계로 쪼개봤어요")
+            Text("목표를 쉽게 이룰 수 있도록 5단계로 쪼개봤어요")
               .font(.memom(.subheadline))
               .foregroundStyle(.secondary)
               .padding(.bottom, 8)
