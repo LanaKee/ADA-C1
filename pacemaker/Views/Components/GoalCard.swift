@@ -32,7 +32,7 @@ struct GoalCard: View {
       return .blue
     }
   }
-
+  
   var body: some View {
     ZStack {
       HStack(alignment: .top, spacing: 12) {
@@ -103,29 +103,47 @@ struct GoalCard: View {
       subgoal: GoalPlanResponse(
         id: 1,
         goal: "Swift UI를 공부하세요",
-        description: "리이오와 밥을 먹으세요"
+        description: "리이오와 밥을 먹으세요",
+        tips: [
+          SubGoalTip(
+            question: "리이오와 어떻게 밥을 먹을 수 있나요?",
+            answer: "리이오는 밥 먹기 예약 폼을 운영합니다"
+          )
+        ]
       ),
       disabled: false,
       onTap: {},
       status: .normal
     )
-
+    
     GoalCard(
       subgoal: GoalPlanResponse(
         id: 2,
         goal: "Swift UI를 공부하세요",
-        description: "리이오와 밥을 먹으세요"
+        description: "리이오와 밥을 먹으세요",
+        tips: [
+          SubGoalTip(
+            question: "리이오와 어떻게 밥을 먹을 수 있나요?",
+            answer: "리이오는 밥 먹기 예약 폼을 운영합니다"
+          )
+        ]
       ),
       disabled: false,
       onTap: {},
       status: .inProgress
     )
-
+    
     GoalCard(
       subgoal: GoalPlanResponse(
         id: 3,
         goal: "Swift UI를 공부하세요",
-        description: "리이오와 밥을 먹으세요"
+        description: "리이오와 밥을 먹으세요",
+        tips: [
+          SubGoalTip(
+            question: "리이오와 어떻게 밥을 먹을 수 있나요?",
+            answer: "리이오는 밥 먹기 예약 폼을 운영합니다"
+          )
+        ]
       ),
       disabled: false,
       onTap: {},
@@ -140,7 +158,13 @@ struct GoalCard: View {
     subgoal: GoalPlanResponse(
       id: 4,
       goal: "Swift UI를 공부하세요",
-      description: "리이오와 밥을 먹으세요"
+      description: "리이오와 밥을 먹으세요",
+      tips: [
+        SubGoalTip(
+          question: "리이오와 어떻게 밥을 먹을 수 있나요?",
+          answer: "리이오는 밥 먹기 예약 폼을 운영합니다"
+        )
+      ]
     ),
     disabled: true,
     onTap: {},

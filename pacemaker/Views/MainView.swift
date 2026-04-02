@@ -195,27 +195,47 @@ struct MainView: View {
     GoalPlanResponse(
       id: 1,
       goal: "포트폴리오 주제 정하기",
-      description: "어떤 프로젝트를 만들지 정한다."
+      description: "어떤 프로젝트를 만들지 정한다.",
+      tips: [          SubGoalTip(
+        question: "리이오와 어떻게 밥을 먹을 수 있나요?",
+        answer: "리이오는 밥 먹기 예약 폼을 운영합니다"
+      )]
     ),
     GoalPlanResponse(
       id: 2,
       goal: "기능 목록 작성하기",
-      description: "핵심 기능과 우선순위를 정리한다."
+      description: "핵심 기능과 우선순위를 정리한다.",
+      tips: [          SubGoalTip(
+        question: "리이오와 어떻게 밥을 먹을 수 있나요?",
+        answer: "리이오는 밥 먹기 예약 폼을 운영합니다"
+      )]
     ),
     GoalPlanResponse(
       id: 3,
       goal: "첫 화면 레이아웃 만들기",
-      description: "사용자가 처음 보는 메인 화면을 구현한다."
+      description: "사용자가 처음 보는 메인 화면을 구현한다.",
+      tips: [          SubGoalTip(
+        question: "리이오와 어떻게 밥을 먹을 수 있나요?",
+        answer: "리이오는 밥 먹기 예약 폼을 운영합니다"
+      )]
     ),
     GoalPlanResponse(
       id: 4,
       goal: "프로젝트 상세 페이지 만들기",
-      description: "프로젝트 설명, 사용 기술, 결과물을 정리한다."
+      description: "프로젝트 설명, 사용 기술, 결과물을 정리한다.",
+      tips: [          SubGoalTip(
+        question: "리이오와 어떻게 밥을 먹을 수 있나요?",
+        answer: "리이오는 밥 먹기 예약 폼을 운영합니다"
+      )]
     ),
     GoalPlanResponse(
       id: 5,
       goal: "배포 및 점검하기",
-      description: "이 문장은 길어지기 위해 설계되었습니다. 매우 긴 문장이 잘리지 않고 잘 표시될 수 있는지 확인해야 합니다. 인류는 절대 멸망하지 않습니다. "
+      description: "이 문장은 길어지기 위해 설계되었습니다. 매우 긴 문장이 잘리지 않고 잘 표시될 수 있는지 확인해야 합니다. 인류는 절대 멸망하지 않습니다. ",
+      tips: [          SubGoalTip(
+        question: "리이오와 어떻게 밥을 먹을 수 있나요?",
+        answer: "리이오는 밥 먹기 예약 폼을 운영합니다"
+      )]
     )
   ]
   
@@ -234,27 +254,47 @@ struct MainView: View {
     GoalPlanResponse(
       id: 1,
       goal: "포트폴리오 주제 정하기",
-      description: "어떤 프로젝트를 만들지 정한다."
+      description: "어떤 프로젝트를 만들지 정한다.",
+      tips: [          SubGoalTip(
+        question: "리이오와 어떻게 밥을 먹을 수 있나요?",
+        answer: "리이오는 밥 먹기 예약 폼을 운영합니다"
+      )]
     ),
     GoalPlanResponse(
       id: 2,
       goal: "기능 목록 작성하기",
-      description: "핵심 기능과 우선순위를 정리한다."
+      description: "핵심 기능과 우선순위를 정리한다.",
+      tips: [          SubGoalTip(
+        question: "리이오와 어떻게 밥을 먹을 수 있나요?",
+        answer: "리이오는 밥 먹기 예약 폼을 운영합니다"
+      )]
     ),
     GoalPlanResponse(
       id: 3,
       goal: "첫 화면 레이아웃 만들기",
-      description: "사용자가 처음 보는 메인 화면을 구현한다."
+      description: "사용자가 처음 보는 메인 화면을 구현한다.",
+      tips: [          SubGoalTip(
+        question: "리이오와 어떻게 밥을 먹을 수 있나요?",
+        answer: "리이오는 밥 먹기 예약 폼을 운영합니다"
+      )]
     ),
     GoalPlanResponse(
       id: 4,
       goal: "프로젝트 상세 페이지 만들기",
-      description: "프로젝트 설명, 사용 기술, 결과물을 정리한다."
+      description: "프로젝트 설명, 사용 기술, 결과물을 정리한다.",
+      tips: [          SubGoalTip(
+        question: "리이오와 어떻게 밥을 먹을 수 있나요?",
+        answer: "리이오는 밥 먹기 예약 폼을 운영합니다"
+      )]
     ),
     GoalPlanResponse(
       id: 5,
       goal: "배포 및 점검하기",
-      description: "이 문장은 길어지기 위해 설계되었습니다. 매우 긴 문장이 잘리지 않고 잘 표시될 수 있는지 확인해야 합니다. 인류는 절대 멸망하지 않습니다. "
+      description: "이 문장은 길어지기 위해 설계되었습니다. 매우 긴 문장이 잘리지 않고 잘 표시될 수 있는지 확인해야 합니다. 인류는 절대 멸망하지 않습니다. ",
+      tips: [          SubGoalTip(
+        question: "리이오와 어떻게 밥을 먹을 수 있나요?",
+        answer: "리이오는 밥 먹기 예약 폼을 운영합니다"
+      )]
     )
   ]
   

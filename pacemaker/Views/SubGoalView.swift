@@ -14,7 +14,6 @@ struct SubGoalView: View {
 
   @Environment(\.dismiss) private var dismiss
   @State private var tips: [SubGoalTip] = []
-  @State private var isLoadingTips: Bool = false
   @State private var expandedTipIndex: Int? = nil
 
   private let client = FoundationModelClient(instruction: instruction)
@@ -65,53 +64,38 @@ struct SubGoalView: View {
             .padding(.top, 16)
           
 
-            if isLoadingTips {
-              ForEach(0..<3, id: \.self) { _ in
-                VStack(alignment: .leading, spacing: 10) {
-                  RoundedRectangle(cornerRadius: 6)
-                    .fill(.white.opacity(0.15))
-                    .frame(height: 14)
-                    .frame(maxWidth: .infinity)
-                }
-                .padding(16)
-                .glassEffect(.regular, in: .rect(cornerRadius: 16))
-                .padding(.horizontal, 10)
-                .shimmering()
-              }
-            } else {
-              ForEach(Array(tips.enumerated()), id: \.offset) { index, tip in
-                VStack(alignment: .leading, spacing: 0) {
-                  Button {
-                    withAnimation(.easeInOut(duration: 0.25)) {
-                      expandedTipIndex = expandedTipIndex == index ? nil : index
-                    }
-                  } label: {
-                    HStack {
-                      Text(tip.question)
-                        .font(.subheadline.bold())
-                        .multilineTextAlignment(.leading)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-
-                      Image(systemName: "chevron.down")
-                        .font(.caption.bold())
-                        .foregroundStyle(.secondary)
-                        .rotationEffect(.degrees(expandedTipIndex == index ? 180 : 0))
-                    }
-                    .padding(16)
+            ForEach(Array((subGoal?.tips ?? []).enumerated()), id: \.offset) { index, tip in
+              VStack(alignment: .leading, spacing: 0) {
+                Button {
+                  withAnimation(.easeInOut(duration: 0.25)) {
+                    expandedTipIndex = expandedTipIndex == index ? nil : index
                   }
-                  .buttonStyle(.plain)
+                } label: {
+                  HStack {
+                    Text(tip.question)
+                      .font(.subheadline.bold())
+                      .multilineTextAlignment(.leading)
+                      .frame(maxWidth: .infinity, alignment: .leading)
 
-                  if expandedTipIndex == index {
-                    Text(tip.answer)
-                      .font(.subheadline)
+                    Image(systemName: "chevron.down")
+                      .font(.caption.bold())
                       .foregroundStyle(.secondary)
-                      .padding(.horizontal, 16)
-                      .padding(.bottom, 16)
+                      .rotationEffect(.degrees(expandedTipIndex == index ? 180 : 0))
                   }
+                  .padding(16)
                 }
-                .glassEffect(.regular, in: .rect(cornerRadius: 16))
-                .padding(.horizontal, 10)
+                .buttonStyle(.plain)
+
+                if expandedTipIndex == index {
+                  Text(tip.answer)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 16)
+                }
               }
+              .glassEffect(.regular, in: .rect(cornerRadius: 16))
+              .padding(.horizontal, 10)
             }
           }
           .padding(.top, 6)
@@ -130,30 +114,42 @@ struct SubGoalView: View {
       }
       .navigationTitle(subGoal?.goal ?? "로딩중...")
       .task {
-        guard let subGoal else { return }
-        isLoadingTips = true
-        let result = await client.getTips(subgoal: subGoal, allSubgoals: allSubgoals)
-        isLoadingTips = false
-        if case .success(let tipsResult) = result {
-          withAnimation {
-            tips = tipsResult.questions
-          }
-        }
       }
     }
   }
 }
+
 #Preview {
   SubGoalView(
     subGoal:
       GoalPlanResponse(
         id: 2,
         goal: "리이오와 밥 약속 잡기",
-        description: "리이오와 밥을 먹으세요"
+        description: "리이오와 밥을 먹으세요",
+        tips: [          SubGoalTip(
+          question: "리이오와 어떻게 밥을 먹을 수 있나요?",
+          answer: "리이오는 밥 먹기 예약 폼을 운영합니다"
+        )]
       ),
     allSubgoals: [
-      GoalPlanResponse(id: 1, goal: "연락처 확인하기", description: "리이오의 연락처를 확인한다"),
-      GoalPlanResponse(id: 2, goal: "리이오와 밥 약속 잡기", description: "리이오와 밥을 먹으세요"),
+      GoalPlanResponse(
+        id: 1,
+        goal: "연락처 확인하기",
+        description: "리이오의 연락처를 확인한다",
+        tips: [          SubGoalTip(
+          question: "리이오와 어떻게 밥을 먹을 수 있나요?",
+          answer: "리이오는 밥 먹기 예약 폼을 운영합니다"
+        )]
+      ),
+      GoalPlanResponse(
+        id: 2,
+        goal: "연락처 확인하기",
+        description: "리이오의 연락처를 확인한다",
+        tips: [          SubGoalTip(
+          question: "리이오와 어떻게 밥을 먹을 수 있나요?",
+          answer: "리이오는 밥 먹기 예약 폼을 운영합니다"
+        )]
+      ),
     ],
     onComplete: {}
   )
