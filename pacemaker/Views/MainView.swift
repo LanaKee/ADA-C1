@@ -6,12 +6,8 @@
 //
 
 import SwiftUI
+import ConfettiSwiftUI
 import FoundationModels
-
-enum ViewMode {
-  case carousel
-  case list
-}
 
 struct MainView: View {
   @Environment(\.colorScheme) var colorScheme
@@ -29,7 +25,7 @@ struct MainView: View {
   @State private var isLoading: Bool = false
   @State private var displayPhase: GoalDisplayPhaseEnum = .input
   
-  @State private var currentView: ViewMode = .carousel
+  @State private var trigger: Int = 0
   
   private let client = FoundationModelClient(instruction: instruction)
   
@@ -115,11 +111,24 @@ struct MainView: View {
               }
             )
           }
+          
+        case .final:
+          Text("축하합니다 목표를 완료하셨어요!")
+            .font(.memom(.subheadline))
+            .foregroundStyle(.secondary)
+            .padding(.top, 4)
+          Spacer()
+          SproutView(level: 5) {
+            trigger += 1
+          }.onAppear {
+            trigger += 1
+          }
+          .confettiCannon(trigger: $trigger)
         }
         VStack{}
-        .frame(maxWidth: .infinity, alignment: .center)
-        .padding(.vertical, 30)
-        .background(.brown)
+          .frame(maxWidth: .infinity, alignment: .center)
+          .padding(.vertical, 30)
+          .background(.brown)
       }
       .background(
         DayViewReduced()
@@ -128,9 +137,13 @@ struct MainView: View {
         SubGoalView(
           subGoal: goal,
           allSubgoals: response?.subgoals ?? [],
+          goalLevel: goalLevel,
           onComplete: {
             goalLevel = goal.id + 1
             currentPage = goal.id
+            if (goalLevel > 5) {
+              displayPhase = .final
+            }
           }
         )
       }
@@ -303,4 +316,62 @@ struct MainView: View {
   )
 }
 
+
+#Preview("완료 했을때") {
+  let mockSubgoals = [
+    GoalPlanResponse(
+      id: 1,
+      goal: "포트폴리오 주제 정하기",
+      description: "어떤 프로젝트를 만들지 정한다.",
+      tips: [          SubGoalTip(
+        question: "리이오와 어떻게 밥을 먹을 수 있나요?",
+        answer: "리이오는 밥 먹기 예약 폼을 운영합니다"
+      )]
+    ),
+    GoalPlanResponse(
+      id: 2,
+      goal: "기능 목록 작성하기",
+      description: "핵심 기능과 우선순위를 정리한다.",
+      tips: [          SubGoalTip(
+        question: "리이오와 어떻게 밥을 먹을 수 있나요?",
+        answer: "리이오는 밥 먹기 예약 폼을 운영합니다"
+      )]
+    ),
+    GoalPlanResponse(
+      id: 3,
+      goal: "첫 화면 레이아웃 만들기",
+      description: "사용자가 처음 보는 메인 화면을 구현한다.",
+      tips: [          SubGoalTip(
+        question: "리이오와 어떻게 밥을 먹을 수 있나요?",
+        answer: "리이오는 밥 먹기 예약 폼을 운영합니다"
+      )]
+    ),
+    GoalPlanResponse(
+      id: 4,
+      goal: "프로젝트 상세 페이지 만들기",
+      description: "프로젝트 설명, 사용 기술, 결과물을 정리한다.",
+      tips: [          SubGoalTip(
+        question: "리이오와 어떻게 밥을 먹을 수 있나요?",
+        answer: "리이오는 밥 먹기 예약 폼을 운영합니다"
+      )]
+    ),
+    GoalPlanResponse(
+      id: 5,
+      goal: "배포 및 점검하기",
+      description: "이 문장은 길어지기 위해 설계되었습니다. 매우 긴 문장이 잘리지 않고 잘 표시될 수 있는지 확인해야 합니다. 인류는 절대 멸망하지 않습니다. ",
+      tips: [          SubGoalTip(
+        question: "리이오와 어떻게 밥을 먹을 수 있나요?",
+        answer: "리이오는 밥 먹기 예약 폼을 운영합니다"
+      )]
+    )
+  ]
+  
+  let mockPlan = GoalPlan(subgoals: mockSubgoals)
+  return MainView(
+    previewGoal: "포트폴리오 만들기",
+    previewResponse: mockPlan,
+    previewGoalLevel: 1,
+    previewDisplayPhase: .final
+  )
+}
 

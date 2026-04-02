@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		962422092F7DFCC100402F8B /* ConfettiSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 962422082F7DFCC100402F8B /* ConfettiSwiftUI */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		9682C6A32F6D148E00C5E030 /* pacemaker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = pacemaker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				962422092F7DFCC100402F8B /* ConfettiSwiftUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +83,7 @@
 			);
 			name = pacemaker;
 			packageProductDependencies = (
+				962422082F7DFCC100402F8B /* ConfettiSwiftUI */,
 			);
 			productName = pacemaker;
 			productReference = 9682C6A32F6D148E00C5E030 /* pacemaker.app */;
@@ -107,6 +113,9 @@
 			);
 			mainGroup = 9682C69A2F6D148E00C5E030;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				962422072F7DFCC100402F8B /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 9682C6A42F6D148E00C5E030 /* Products */;
 			projectDirPath = "";
@@ -349,6 +358,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		962422072F7DFCC100402F8B /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/simibac/ConfettiSwiftUI.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		962422082F7DFCC100402F8B /* ConfettiSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 962422072F7DFCC100402F8B /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */;
+			productName = ConfettiSwiftUI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 9682C69B2F6D148E00C5E030 /* Project object */;
 }
