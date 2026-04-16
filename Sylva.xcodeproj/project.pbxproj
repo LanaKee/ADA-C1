@@ -11,16 +11,16 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		9682C6A32F6D148E00C5E030 /* pacemaker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = pacemaker.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9682C6A32F6D148E00C5E030 /* Sylva.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sylva.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		965661D32F7BA80000D57731 /* Exceptions for "pacemaker" folder in "pacemaker" target */ = {
+		965661D32F7BA80000D57731 /* Exceptions for "pacemaker" folder in "Sylva" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = 9682C6A22F6D148E00C5E030 /* pacemaker */;
+			target = 9682C6A22F6D148E00C5E030 /* Sylva */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -28,7 +28,7 @@
 		9682C6A52F6D148E00C5E030 /* pacemaker */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				965661D32F7BA80000D57731 /* Exceptions for "pacemaker" folder in "pacemaker" target */,
+				965661D32F7BA80000D57731 /* Exceptions for "pacemaker" folder in "Sylva" target */,
 			);
 			path = pacemaker;
 			sourceTree = "<group>";
@@ -58,7 +58,7 @@
 		9682C6A42F6D148E00C5E030 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				9682C6A32F6D148E00C5E030 /* pacemaker.app */,
+				9682C6A32F6D148E00C5E030 /* Sylva.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -66,9 +66,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		9682C6A22F6D148E00C5E030 /* pacemaker */ = {
+		9682C6A22F6D148E00C5E030 /* Sylva */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 9682C6B02F6D148F00C5E030 /* Build configuration list for PBXNativeTarget "pacemaker" */;
+			buildConfigurationList = 9682C6B02F6D148F00C5E030 /* Build configuration list for PBXNativeTarget "Sylva" */;
 			buildPhases = (
 				9682C69F2F6D148E00C5E030 /* Sources */,
 				9682C6A02F6D148E00C5E030 /* Frameworks */,
@@ -81,12 +81,12 @@
 			fileSystemSynchronizedGroups = (
 				9682C6A52F6D148E00C5E030 /* pacemaker */,
 			);
-			name = pacemaker;
+			name = Sylva;
 			packageProductDependencies = (
 				962422082F7DFCC100402F8B /* ConfettiSwiftUI */,
 			);
 			productName = pacemaker;
-			productReference = 9682C6A32F6D148E00C5E030 /* pacemaker.app */;
+			productReference = 9682C6A32F6D148E00C5E030 /* Sylva.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -104,7 +104,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 9682C69E2F6D148E00C5E030 /* Build configuration list for PBXProject "pacemaker" */;
+			buildConfigurationList = 9682C69E2F6D148E00C5E030 /* Build configuration list for PBXProject "Sylva" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -121,7 +121,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				9682C6A22F6D148E00C5E030 /* pacemaker */,
+				9682C6A22F6D148E00C5E030 /* Sylva */,
 			);
 		};
 /* End PBXProject section */
@@ -339,7 +339,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		9682C69E2F6D148E00C5E030 /* Build configuration list for PBXProject "pacemaker" */ = {
+		9682C69E2F6D148E00C5E030 /* Build configuration list for PBXProject "Sylva" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9682C6AE2F6D148F00C5E030 /* Debug */,
@@ -348,7 +348,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		9682C6B02F6D148F00C5E030 /* Build configuration list for PBXNativeTarget "pacemaker" */ = {
+		9682C6B02F6D148F00C5E030 /* Build configuration list for PBXNativeTarget "Sylva" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9682C6B12F6D148F00C5E030 /* Debug */,
