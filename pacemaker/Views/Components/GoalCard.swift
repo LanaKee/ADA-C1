@@ -36,16 +36,11 @@ struct GoalCard: View {
   var body: some View {
     ZStack {
       HStack(alignment: .top, spacing: 12) {
-        //        Rectangle()
-        //          .fill(.accent)
-        //          .frame(width: 3)
-        //          .clipShape(Capsule())
-        
         VStack(alignment: .leading, spacing: 6) {
           HStack(alignment: .center) {
             ZStack {
               RoundedRectangle(cornerRadius: 8, style: .continuous)
-                .fill(colorScheme == .light ? .accent.opacity(0.5) : .accent.opacity(0.3))
+                .fill(status == .completed ? .treeGreen.opacity(0.8) : .accent.opacity(0.4))
                 .frame(width: 32, height: 32)
               
               switch status {
@@ -53,7 +48,7 @@ struct GoalCard: View {
                 Text("\(subgoal.id)")
               case .completed:
                 Image(systemName: "checkmark")
-                  .foregroundStyle(.accent)
+                  .foregroundStyle(.white)
               case .inProgress:
                 Text("\(subgoal.id)")
               }
@@ -75,29 +70,17 @@ struct GoalCard: View {
             .foregroundStyle(.secondary)
         }
       }
-      // .blur(radius: (disabled ? 5 : 0))
       .fixedSize(horizontal: false, vertical: true)
       .frame(maxWidth: .infinity, alignment: .leading)
       .padding()
-      .background(status == .completed ? colorScheme == .light ? .accent.opacity(0.4) : .accent.opacity(0.3) : .gray.opacity(0))
-      .cornerRadius(15)
-      .glassEffect(.regular, in: .rect(cornerRadius: 15))
-      .shadow(radius: 10)
+      .background(status == .completed ? .treeGreen.opacity(0.7) : .sylvaBg)
+      .overlay(RoundedRectangle(cornerRadius: 16).stroke(style: StrokeStyle(lineWidth: 1)))
+      .cornerRadius(16)
       .simultaneousGesture(TapGesture().onEnded {
         if !disabled {
           onTap()
         }
       })
-      //      if disabled {
-      //        VStack (spacing: 0) {
-      //          Image(systemName: "lock.fill")
-      //            .font(.system(size: 24))
-      //            .padding(.bottom, 10)
-      //            .shadow(radius: 10)
-      //          Text("이전 목표를 완료하고 확인해 보세요")
-      //            .font(.headline.bold())
-      //        }
-      //      }
     }
   }
 }
