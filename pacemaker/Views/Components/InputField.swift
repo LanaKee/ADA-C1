@@ -19,7 +19,8 @@ struct InputField: View {
   var body: some View {
     Label {
       Text("목표 씨앗 만들기")
-        .font(.title.bold())
+        .font(.memom(.title))
+      
     } icon: {
       Image("seed")
         .resizable()
@@ -57,15 +58,16 @@ struct InputField: View {
       .disabled(isLoading)
     }
     .padding(10)
-    .glassEffect(.regular, in: .rect(cornerRadius: 16))
-    
+    .background(.white)
+    .cornerRadius(16)
+    .overlay(RoundedRectangle(cornerRadius: 16).stroke(style: StrokeStyle(lineWidth: 0.5)))
     .padding(.horizontal, 20)
   }
 }
 
 /**
  * @deprecated
-*/
+ */
 struct groundInputField: View {
   let isLoading: Bool
   let generateGoals: () async -> Void
@@ -74,67 +76,61 @@ struct groundInputField: View {
   @FocusState private var isTextFieldFocused: Bool
   
   var body: some View {
-      HStack(spacing: 10) {
-          TextField("이루고 싶은 목표를 간략하게 입력해주세요", text: $goal)
-              .textInputAutocapitalization(.never)
-              .disableAutocorrection(true)
+    HStack(spacing: 10) {
+      TextField("이루고 싶은 목표를 간략하게 입력해주세요", text: $goal)
+        .textInputAutocapitalization(.never)
+        .disableAutocorrection(true)
+        .disabled(isLoading)
+        .focused($isTextFieldFocused)
+      
+      Button {
+        Task {
+          isTextFieldFocused = false
+          await generateGoals()
+        }
+      } label: {
+        Group {
+          if isLoading {
+            ProgressView()
+              .tint(.white)
+              .frame(width: 20, height: 20)
+          } else {
+            Image(systemName: "arrow.up")
+              .font(.system(size: 18, weight: .bold))
               .foregroundColor(.white)
-              .disabled(isLoading)
-              .focused($isTextFieldFocused)
-
-          Button {
-              Task {
-                  isTextFieldFocused = false
-                  await generateGoals()
-              }
-          } label: {
-              Group {
-                  if isLoading {
-                      ProgressView()
-                          .tint(.white)
-                          .frame(width: 20, height: 20)
-                  } else {
-                      Image(systemName: "arrow.up")
-                          .font(.system(size: 18, weight: .bold))
-                          .foregroundColor(.white)
-                  }
-              }
-              .frame(width: 36, height: 36)
-              .background(Color.gray.opacity(0.8))
-              .clipShape(RoundedRectangle(cornerRadius: 12))
           }
-          .disabled(isLoading)
+        }
+        .frame(width: 36, height: 36)
+        .background(Color.gray.opacity(0.8))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
       }
-      .padding(10)
-      .background(Color(red: 0.35, green: 0.22, blue: 0.12))
-      .clipShape(RoundedRectangle(cornerRadius: 16))
-      .padding(.horizontal, 16)
-      .padding(.bottom, 20)
+      .disabled(isLoading)
+    }
+    .padding(10)
+    .border(.red, width: 5)
+//    .clipShape(RoundedRectangle(cornerRadius: 16))
+    .padding(.horizontal, 16)
+    .padding(.bottom, 20)
   }
 }
 
 #Preview("목표씨앗") {
-  InputField(
-    icon: "checkmark",
-    isLoading: false,
-    generateGoals: {},
-    goal: .init(get: { "Hello" }, set: { _ in }))
-  InputField(
-    icon: "arrow.up",
-    isLoading: false,
-    generateGoals: {},
-    goal: .init(get: { "Hello" }, set: { _ in }))
-  InputField(
-    icon: "list.bullet.below.rectangle",
-    isLoading: false,
-    generateGoals: {},
-    goal: .init(get: { "Hello" }, set: { _ in }))
+  VStack {
+    Spacer()
+    InputField(
+      icon: "arrow.up",
+      isLoading: false,
+      generateGoals: {},
+      goal: .init(get: { "Hello" }, set: { _ in }))
+    Spacer()
+  }.background(.skyBlue)
+  
 }
 
 #Preview("땅 인풋필드") {
   groundInputField(
-        isLoading: false,
-        generateGoals: { },
-        goal: .init(get: { "Hello" }, set: { _ in })
-    )
+    isLoading: false,
+    generateGoals: { },
+    goal: .init(get: { "Hello" }, set: { _ in })
+  )
 }
