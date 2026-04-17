@@ -17,16 +17,6 @@ struct InputField: View {
   @FocusState private var isFocused: Bool
   
   var body: some View {
-    Label {
-      Text("목표 씨앗 만들기")
-        .font(.memom(.title))
-      
-    } icon: {
-      Image("ico_seed")
-        .resizable()
-        .scaledToFit()
-        .frame(width: 50, height: 50)
-    }.padding(10)
     HStack(spacing: 10) {
       TextField("이루고 싶은 목표를 간략하게 입력해주세요", text: $goal)
         .textInputAutocapitalization(.never)
