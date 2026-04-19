@@ -21,7 +21,6 @@ struct Loading: View {
         .shadow(color: .gray, radius: 4)
       Spacer ()
     }
-    .padding(.top, 20)
   }
 }
 
