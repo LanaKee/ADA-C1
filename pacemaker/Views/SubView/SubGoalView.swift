@@ -8,15 +8,15 @@
 import SwiftUI
 
 struct SubGoalView: View {
-  let subGoal: GoalPlanResponse?
-  let allSubgoals: [GoalPlanResponse]
+  let subGoal: SubGoal?
+  let allSubgoals: [SubGoal]
   let goalLevel: Int
   let onComplete: () -> Void
 
   @Environment(\.dismiss) private var dismiss
   @State private var expandedTipIndex: Int? = nil
 
-  private var goalTips: [SubGoalTip] {
+  private var goalTips: [FAQ] {
     subGoal?.tips ?? []
   }
 
@@ -123,29 +123,29 @@ struct SubGoalView: View {
 #Preview {
   SubGoalView(
     subGoal:
-      GoalPlanResponse(
+      SubGoal(
         id: 2,
         goal: "리이오와 밥 약속 잡기",
         description: "리이오와 밥을 먹으세요",
         tips: [
-          SubGoalTip(question: "리이오와 어떻게 밥을 먹나요", answer: "리이오는 밥먹기 예약 폼을 운영합니다")
+          FAQ(question: "리이오와 어떻게 밥을 먹나요", answer: "리이오는 밥먹기 예약 폼을 운영합니다")
         ]
       ),
     allSubgoals: [
-      GoalPlanResponse(
+      SubGoal(
         id: 1,
         goal: "리이오와 밥 약속 잡기",
         description: "리이오와 밥을 먹으세요",
         tips: [
-          SubGoalTip(question: "리이오와 어떻게 밥을 먹나요", answer: "리이오는 밥먹기 예약 폼을 운영합니다")
+          FAQ(question: "리이오와 어떻게 밥을 먹나요", answer: "리이오는 밥먹기 예약 폼을 운영합니다")
         ]
       ),
-      GoalPlanResponse(
+      SubGoal(
         id: 2,
         goal: "리이오와 밥 약속 잡기",
         description: "리이오와 밥을 먹으세요",
         tips: [
-          SubGoalTip(question: "리이오와 어떻게 밥을 먹나요", answer: "리이오는 밥먹기 예약 폼을 운영합니다")
+          FAQ(question: "리이오와 어떻게 밥을 먹나요", answer: "리이오는 밥먹기 예약 폼을 운영합니다")
         ]
       ),
     ], goalLevel: 2,

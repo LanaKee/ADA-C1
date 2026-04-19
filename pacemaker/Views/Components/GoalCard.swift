@@ -17,7 +17,7 @@ enum GoalCardStatus {
 struct GoalCard: View {
   @Environment(\.colorScheme) private var colorScheme
   
-  var subgoal: GoalPlanResponse
+  var subgoal: SubGoal
   let disabled: Bool
   let onTap: () -> Void
   let status: GoalCardStatus
@@ -88,12 +88,12 @@ struct GoalCard: View {
 #Preview ("상태별") {
   VStack(spacing: 20) {
     GoalCard(
-      subgoal: GoalPlanResponse(
+      subgoal: SubGoal(
         id: 1,
         goal: "Swift UI를 공부하세요",
         description: "리이오와 밥을 먹으세요",
         tips: [
-          SubGoalTip(
+          FAQ(
             question: "리이오와 어떻게 밥을 먹을 수 있나요?",
             answer: "리이오는 밥 먹기 예약 폼을 운영합니다"
           )
@@ -105,12 +105,12 @@ struct GoalCard: View {
     )
     
     GoalCard(
-      subgoal: GoalPlanResponse(
+      subgoal: SubGoal(
         id: 2,
         goal: "Swift UI를 공부하세요",
         description: "리이오와 밥을 먹으세요",
         tips: [
-          SubGoalTip(
+          FAQ(
             question: "리이오와 어떻게 밥을 먹을 수 있나요?",
             answer: "리이오는 밥 먹기 예약 폼을 운영합니다"
           )
@@ -122,12 +122,12 @@ struct GoalCard: View {
     )
     
     GoalCard(
-      subgoal: GoalPlanResponse(
+      subgoal: SubGoal(
         id: 3,
         goal: "Swift UI를 공부하세요",
         description: "리이오와 밥을 먹으세요",
         tips: [
-          SubGoalTip(
+          FAQ(
             question: "리이오와 어떻게 밥을 먹을 수 있나요?",
             answer: "리이오는 밥 먹기 예약 폼을 운영합니다"
           )
@@ -143,12 +143,12 @@ struct GoalCard: View {
 
 #Preview ("비활성화") {
   GoalCard(
-    subgoal: GoalPlanResponse(
+    subgoal: SubGoal(
       id: 4,
       goal: "Swift UI를 공부하세요",
       description: "리이오와 밥을 먹으세요",
       tips: [
-        SubGoalTip(
+        FAQ(
           question: "리이오와 어떻게 밥을 먹을 수 있나요?",
           answer: "리이오는 밥 먹기 예약 폼을 운영합니다"
         )

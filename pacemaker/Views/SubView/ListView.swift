@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct ListView: View {
-  let subgoals: [GoalPlanResponse]
+  let subgoals: [SubGoal]
   let goalLevel: Int
   let showStartButton: Bool
-  @Binding var selectedGoal: GoalPlanResponse?
+  @Binding var selectedGoal: SubGoal?
   @Binding var displayPhase: GoalDisplayPhaseEnum
 
   var body: some View {

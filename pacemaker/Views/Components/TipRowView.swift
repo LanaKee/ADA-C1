@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TipRowView: View {
-  let tip: SubGoalTip
+  let tip: FAQ
   let isExpanded: Bool
   let onTap: () -> Void
 

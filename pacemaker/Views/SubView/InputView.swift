@@ -6,14 +6,23 @@
 //
 
 import SwiftUI
+import Foundation
+import FirebaseAI
 
 struct InputView: View {
-  let selectedModel: AIAssistant
-  let onSubmit: () async -> Void
+  let selectedModel: AIAssistantEnum
 
   @Binding var goal: String
-  
+
+  @State private var response: GoalBreakDown? = nil
   @State private var isLoading: Bool = false
+
+  let ai = FirebaseAI.firebaseAI(backend: .googleAI())
+  lazy var gemini = ai.generativeModel(
+    modelName: "gemini-3-flash-preview",
+    systemInstruction: ModelContent(role: "system", parts: instruction)
+  )
+  private let client = GoalBreakDowner(instruction: instruction)
   
   var body: some View {
     VStack(spacing: 0) {
@@ -35,18 +44,48 @@ struct InputView: View {
       InputField(
         icon: "arrow.up",
         isLoading: isLoading,
-        generateGoals: onSubmit,
+        generateGoals: generateGoals,
         goal: $goal
       )
     }
   }
+  
+  
+  private func generateGoals() async {
+    let trimmed = goal.trimmingCharacters(in: .whitespacesAndNewlines)
+    guard !trimmed.isEmpty else { return }
+    
+    isLoading = true
+    defer { isLoading = false }
+    
+    let result = await client.getResponse(prompt: trimmed)
+    switch result {
+    case .success(let plan):
+      response = plan
+      print(plan)
+      
+    case .failure:
+      print("fail")
+    }
+  }
+  
+//  private func generateGoalBreakDownGemini () async {
+//    let trimmed = goal.trimmingCharacters(in: .whitespacesAndNewlines)
+//    guard !trimmed.isEmpty else { return }
+//    
+//    isLoading = true
+//    defer { isLoading = false }
+//    
+//    gemini.startChat()
+//    let response = try await gemini.generateContent(goal)
+//    print(response!)
+//  }
 }
 
 #Preview {
   VStack(spacing: 0) {
     InputView(
       selectedModel: .appleIntelligence,
-      onSubmit: {},
       goal: .init(get: { "Hello" }, set: { _ in }),
     )
   }
