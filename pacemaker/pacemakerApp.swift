@@ -7,26 +7,37 @@
 
 import SwiftUI
 import SwiftData
+import FirebaseCore
+import FirebaseAppCheck
 
 @main
 struct pacemakerApp: App {
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+  init() {
+    #if DEBUG
+    let providerFactory = AppCheckDebugProviderFactory()
+    AppCheck.setAppCheckProviderFactory(providerFactory)
+    #endif
 
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
-
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
-        .modelContainer(sharedModelContainer)
+    FirebaseApp.configure()
+  }
+  
+  var sharedModelContainer: ModelContainer = {
+    let schema = Schema([
+      Item.self,
+    ])
+    let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+    
+    do {
+      return try ModelContainer(for: schema, configurations: [modelConfiguration])
+    } catch {
+      fatalError("Could not create ModelContainer: \(error)")
     }
+  }()
+  
+  var body: some Scene {
+    WindowGroup {
+      ContentView()
+    }
+    .modelContainer(sharedModelContainer)
+  }
 }
