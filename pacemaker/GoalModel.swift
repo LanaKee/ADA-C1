@@ -20,7 +20,7 @@ class GoalModel {
   var state: GoalModelState
   var goal: String
   
-  var goalBreakdown: [GoalBreakDown]
+  var goalBreakdown: GoalBreakDown
   
   var createdAt: Date
   var finishedAt: Date?
@@ -30,7 +30,7 @@ class GoalModel {
     self.state = .active
 
     self.goal = goal
-    self.goalBreakdown = [goals]
+    self.goalBreakdown = goals
 
     self.createdAt = Date()
     self.finishedAt = nil

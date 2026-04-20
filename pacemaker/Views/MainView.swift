@@ -6,12 +6,28 @@
 //
 
 import SwiftUI
+import SwiftData
 import Combine
 import ConfettiSwiftUI
 import FoundationModels
 
 struct MainView: View {
+  @Environment(\.modelContext) var context
   @StateObject private var viewModel = MainViewModel()
+
+  init () {
+    if !viewModel.savedGoals.isEmpty {
+      if let index = viewModel.savedGoals.firstIndex(where: { $0.state == .active }) {
+        viewModel.response = viewModel.savedGoals[index].goalBreakdown
+          viewModel.displayPhase = .carousel
+        } else {
+          viewModel.displayPhase = .input
+        }
+    } else {
+        viewModel.displayPhase = .input
+    }
+  }
+  
   var isInitialList: Bool {
     if case .initialList = viewModel.displayPhase { return true }
     return false
@@ -119,5 +135,5 @@ struct MainView: View {
 }
 
 #Preview {
-  MainView()
+
 }

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 import Combine
 import Foundation
 import FirebaseAI
@@ -13,6 +14,7 @@ import FirebaseAILogic
 
 @MainActor
 class MainViewModel: ObservableObject {
+  @Environment(\.modelContext) var context
   @Published var goal: String = ""
   @Published var response: GoalBreakDown?
   @Published var selectedGoal: SubGoal?
@@ -26,6 +28,8 @@ class MainViewModel: ObservableObject {
   
   @Published var confettiTrigger: Int = 0
   @Published var selectedAssistant: AIAssistantEnum = .appleIntelligence
+  
+  @Query var savedGoals: [GoalModel]
   
   private let client = GoalBreakDowner(instruction: instruction)
   
@@ -57,12 +61,15 @@ class MainViewModel: ObservableObject {
       switch result {
       case .success(let plan):
         response = plan
+        let newGoal = GoalModel(goal: goal, goals: plan)
+        context.insert(newGoal)
         displayPhase = .initialList
-        
+
       case .failure:
         displayPhase = .input
       }
     } else if selectedAssistant == .gemini {
+      isLoading = true
       do {
         let ai = FirebaseAI.firebaseAI(backend: .googleAI())
         let model = ai.generativeModel(

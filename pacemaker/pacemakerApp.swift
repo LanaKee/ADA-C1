@@ -38,6 +38,7 @@ struct pacemakerApp: App {
     WindowGroup {
       ContentView()
     }
+    .modelContainer(for: GoalModel.self)
     .modelContainer(sharedModelContainer)
   }
 }
