@@ -10,30 +10,69 @@ import SwiftData
 import Combine
 import ConfettiSwiftUI
 import FoundationModels
+import FirebaseAI
+import FirebaseAILogic
 
 struct MainView: View {
   @Environment(\.modelContext) var context
+  @Query var savedGoals: [GoalModel]
   @StateObject private var viewModel = MainViewModel()
-
-  init () {
-    if !viewModel.savedGoals.isEmpty {
-      if let index = viewModel.savedGoals.firstIndex(where: { $0.state == .active }) {
-        viewModel.response = viewModel.savedGoals[index].goalBreakdown
-          viewModel.displayPhase = .carousel
-        } else {
-          viewModel.displayPhase = .input
-        }
-    } else {
-        viewModel.displayPhase = .input
-    }
-  }
   
+  private let client = GoalBreakDowner(instruction: instruction)
   var isInitialList: Bool {
     if case .initialList = viewModel.displayPhase { return true }
     return false
   }
   
-  var tesNumt: Int = 0
+  func generateGoals() async -> Void {
+    viewModel.displayPhase = .loading
+    let trimmed = viewModel.goal.trimmingCharacters(in: .whitespacesAndNewlines)
+    if viewModel.selectedAssistant == .appleIntelligence {
+      guard !trimmed.isEmpty else { return }
+      
+      viewModel.isLoading = true
+      defer { viewModel.isLoading = false }
+      
+      let result = await client.getResponse(prompt: trimmed)
+      switch result {
+      case .success(let plan):
+        viewModel.response = plan
+        let newGoal = GoalModel(goal: viewModel.goal, goals: plan)
+        context.insert(newGoal)
+        viewModel.displayPhase = .initialList
+
+      case .failure:
+        viewModel.displayPhase = .input
+      }
+    } else if viewModel.selectedAssistant == .gemini {
+      viewModel.isLoading = true
+      do {
+        let ai = FirebaseAI.firebaseAI(backend: .googleAI())
+        let model = ai.generativeModel(
+          modelName: "gemini-3-flash-preview",
+          generationConfig : GenerationConfig(
+            responseMIMEType: "application/json",
+            responseSchema: geminiSchema
+          ),
+          systemInstruction: ModelContent(role: "system", parts: instruction)
+        )
+        
+        defer { viewModel.isLoading = false }
+        
+        let geminiresponse = try await model.generateContent("사용자 입력: \(trimmed)")
+        guard let text = geminiresponse.text else {
+          return
+        }
+        viewModel.response = try parseGoalBreakDown(from: text)
+        viewModel.displayPhase = .initialList
+        let newGoal = GoalModel(goal: viewModel.goal, goals: GoalBreakDown(subgoals: viewModel.response?.subgoals ?? []))
+        context.insert(newGoal)
+        
+      } catch {
+        print("gemini fail \(error)")
+      }
+    }
+  }
   
   var body: some View {
     NavigationStack {
@@ -47,7 +86,9 @@ struct MainView: View {
               isLoading: $viewModel.isLoading,
               selectedAssistant: viewModel.selectedAssistant,
               onSubmit: {
-                await viewModel.generateGoals()
+                await generateGoals()
+                viewModel.goalLevel = 1
+                
               }
             )
             Spacer()
@@ -81,7 +122,7 @@ struct MainView: View {
                 content:  { index in
                   GoalCard(
                     subgoal: viewModel.subgoals[index],
-                    disabled: false, 
+                    disabled: false,
                     onTap:{viewModel.selectedGoal = subgoals[index]},
                     status: viewModel.goalLevel > subgoals[index].id ? .completed : .normal
                   )
@@ -89,12 +130,6 @@ struct MainView: View {
               .padding(.top, 10)
 
               Spacer()
-
-              Tree(
-                level: viewModel.goalLevel,
-                onTap: {
-                }
-              )
             }
           case .final:
             Text("축하합니다 목표를 완료하셨어요!")
@@ -112,9 +147,31 @@ struct MainView: View {
         } else {
           BonsaiView()
         }
-        Image("img_ground")
-          .resizable()
-          .frame(maxWidth: .infinity, maxHeight: 100)
+        VStack(spacing: 20) {
+          ZStack(alignment: .bottom) {
+            Image("img_ground")
+              .resizable()
+              .frame(maxWidth: .infinity, maxHeight: 100)
+            
+            Tree(
+              level: viewModel.goalLevel,
+              onTap: { }
+            )
+          }
+        }
+      }
+      .onAppear {
+        if !savedGoals.isEmpty {
+          if let index = savedGoals.firstIndex(where: { $0.state == .active }) {
+            viewModel.response = savedGoals[index].goalBreakdown
+            viewModel.goalLevel = savedGoals[index].goalLevel
+            viewModel.displayPhase = .carousel
+          } else {
+            viewModel.displayPhase = .input
+          }
+        } else {
+          viewModel.displayPhase = .input
+        }
       }
       .ignoresSafeArea(edges: .bottom)
       .background(.sky)
@@ -130,10 +187,12 @@ struct MainView: View {
           }
         )
       }
+
     }
   }
 }
 
 #Preview {
-
+  MainView()
 }
+

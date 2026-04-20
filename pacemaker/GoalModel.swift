@@ -19,6 +19,7 @@ class GoalModel {
   @Attribute(.unique) var id: UUID
   var state: GoalModelState
   var goal: String
+  var goalLevel: Int
   
   var goalBreakdown: GoalBreakDown
   
@@ -27,6 +28,7 @@ class GoalModel {
   
   init(goal: String, goals: GoalBreakDown) {
     self.id = UUID()
+    self.goalLevel = 1
     self.state = .active
 
     self.goal = goal

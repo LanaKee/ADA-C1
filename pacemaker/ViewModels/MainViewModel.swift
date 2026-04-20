@@ -9,12 +9,9 @@ import SwiftUI
 import SwiftData
 import Combine
 import Foundation
-import FirebaseAI
-import FirebaseAILogic
 
 @MainActor
 class MainViewModel: ObservableObject {
-  @Environment(\.modelContext) var context
   @Published var goal: String = ""
   @Published var response: GoalBreakDown?
   @Published var selectedGoal: SubGoal?
@@ -29,10 +26,6 @@ class MainViewModel: ObservableObject {
   @Published var confettiTrigger: Int = 0
   @Published var selectedAssistant: AIAssistantEnum = .appleIntelligence
   
-  @Query var savedGoals: [GoalModel]
-  
-  private let client = GoalBreakDowner(instruction: instruction)
-  
   var subgoals: [SubGoal] {
     response?.subgoals ?? []
   }
@@ -45,54 +38,6 @@ class MainViewModel: ObservableObject {
     if case .list = displayPhase { return true }
     if case .carousel = displayPhase { return true }
     return false
-  }
-  
-  func generateGoals() async -> Void {
-    displayPhase = .loading
-    let trimmed = goal.trimmingCharacters(in: .whitespacesAndNewlines)
-    if selectedAssistant == .appleIntelligence {
-      guard !trimmed.isEmpty else { return }
-      
-      isLoading = true
-      defer { isLoading = false }
-      
-      let result = await client.getResponse(prompt: trimmed)
-      print(result)
-      switch result {
-      case .success(let plan):
-        response = plan
-        let newGoal = GoalModel(goal: goal, goals: plan)
-        context.insert(newGoal)
-        displayPhase = .initialList
-
-      case .failure:
-        displayPhase = .input
-      }
-    } else if selectedAssistant == .gemini {
-      isLoading = true
-      do {
-        let ai = FirebaseAI.firebaseAI(backend: .googleAI())
-        let model = ai.generativeModel(
-          modelName: "gemini-3-flash-preview",
-          generationConfig : GenerationConfig(
-            responseMIMEType: "application/json",
-            responseSchema: geminiSchema
-          ),
-          systemInstruction: ModelContent(role: "system", parts: instruction)
-        )
-        
-        defer { isLoading = false }
-        
-        let geminiresponse = try await model.generateContent("사용자 입력: \(trimmed)")
-        guard let text = geminiresponse.text else {
-          return
-        }
-        response = try parseGoalBreakDown(from: text)
-        displayPhase = .initialList
-      } catch {
-        print("gemini fail \(error)")
-      }
-    }
   }
   
   func completeSubgoal(_ subgoal: SubGoal) {

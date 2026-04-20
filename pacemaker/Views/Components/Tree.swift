@@ -14,7 +14,7 @@ struct TreeLevelConfig {
   let bottomPadding: CGFloat
   
   static let configs: [Int: TreeLevelConfig] = [
-    1: TreeLevelConfig(size: CGSize(width: 70, height: 50), bottomPadding: 5),
+    1: TreeLevelConfig(size: CGSize(width: 40, height: 50), bottomPadding: 10),
     2: TreeLevelConfig(size: CGSize(width: 60, height: 90), bottomPadding: 5),
     3: TreeLevelConfig(size: CGSize(width: 70, height: 100), bottomPadding: 5),
     4: TreeLevelConfig(size: CGSize(width: 80, height: 90), bottomPadding: 40),
