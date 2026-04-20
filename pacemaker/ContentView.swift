@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import FoundationModels
 
 struct ContentView: View {
   var body: some View {
