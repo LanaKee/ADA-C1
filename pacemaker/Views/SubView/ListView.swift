@@ -35,7 +35,7 @@ struct ListView: View {
     }
     if showStartButton {
       Button {
-        displayPhase = .carousel
+//        displayPhase = .carousel()
       } label: {
         Label("시작하기", systemImage: "arrow.right")
           .frame(maxWidth: .infinity)
