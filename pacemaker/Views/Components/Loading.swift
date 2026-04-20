@@ -9,6 +9,11 @@ import SwiftUI
 
 struct Loading: View {
   let message: String
+  
+  init(message: String = "로딩중") {
+      self.message = message
+  }
+
   var body: some View {
     VStack(spacing: 12) {
       Spacer ()
@@ -25,5 +30,5 @@ struct Loading: View {
 }
 
 #Preview {
-  Loading(message: "로딩중")
+  Loading()
 }
