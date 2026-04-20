@@ -47,5 +47,5 @@ public let instruction = """
 //  3. Questions should be practical and curiosity-driven — things a first-timer would genuinely ask.
 //  4. Answers must be clear, concise (2-3 sentences), and easy for someone with zero experience to understand.
 //  5. Avoid jargon. If a technical term is necessary, briefly explain it.
-//  6. Follow the SubGoalTips structure strictly.
+//  6. Follow the FAQs structure strictly.
 //  """

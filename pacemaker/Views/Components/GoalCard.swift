@@ -141,23 +141,3 @@ struct GoalCard: View {
   .padding(20)
 }
 
-#Preview ("비활성화") {
-  GoalCard(
-    subgoal: SubGoal(
-      id: 4,
-      goal: "Swift UI를 공부하세요",
-      description: "리이오와 밥을 먹으세요",
-      tips: [
-        FAQ(
-          question: "리이오와 어떻게 밥을 먹을 수 있나요?",
-          answer: "리이오는 밥 먹기 예약 폼을 운영합니다"
-        )
-      ]
-    ),
-    disabled: true,
-    onTap: {},
-    status: .normal
-  ).padding(20)
-}
-
-
