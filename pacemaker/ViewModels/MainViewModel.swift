@@ -37,8 +37,14 @@ class MainViewModel: ObservableObject {
     goalLevel > 5
   }
   
+  var showCarouselListToggle: Bool {
+    if case .list = displayPhase { return true }
+    if case .carousel = displayPhase { return true }
+    return false
+  }
+  
   func generateGoals() async -> Void {
-    isLoading = true
+    displayPhase = .loading
     let trimmed = goal.trimmingCharacters(in: .whitespacesAndNewlines)
     if selectedAssistant == .appleIntelligence {
       guard !trimmed.isEmpty else { return }
@@ -47,10 +53,11 @@ class MainViewModel: ObservableObject {
       defer { isLoading = false }
       
       let result = await client.getResponse(prompt: trimmed)
+      print(result)
       switch result {
       case .success(let plan):
         response = plan
-        displayPhase = .initialList(response!)
+        displayPhase = .initialList
         
       case .failure:
         displayPhase = .input
@@ -66,7 +73,7 @@ class MainViewModel: ObservableObject {
           ),
           systemInstruction: ModelContent(role: "system", parts: instruction)
         )
-
+        
         defer { isLoading = false }
         
         let geminiresponse = try await model.generateContent("사용자 입력: \(trimmed)")
@@ -74,13 +81,11 @@ class MainViewModel: ObservableObject {
           return
         }
         response = try parseGoalBreakDown(from: text)
-        displayPhase = .initialList(response!)
+        displayPhase = .initialList
       } catch {
         print("gemini fail \(error)")
       }
     }
-    isLoading = false
-    
   }
   
   func completeSubgoal(_ subgoal: SubGoal) {
@@ -92,14 +97,15 @@ class MainViewModel: ObservableObject {
   }
   
   func toggleViewMode() {
-    guard let response else { return }
+    guard response != nil else { return }
     withAnimation(.easeInOut(duration: 0.3)) {
       switch displayPhase {
       case .carousel:
-        displayPhase = .list(response)
+        displayPhase = .list
       case .list:
-        displayPhase = .carousel(response, level: goalLevel)
-      default: break
+        displayPhase = .carousel
+      default:
+        break
       }
     }
   }

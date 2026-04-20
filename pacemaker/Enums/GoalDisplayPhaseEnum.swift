@@ -10,9 +10,9 @@ import SwiftUI
 enum GoalDisplayPhaseEnum {
     case input
     case loading
-    case initialList(GoalBreakDown)
-    case list(GoalBreakDown)
-    case carousel(GoalBreakDown, level: Int)
+    case initialList
+    case list
+    case carousel
     case final
 }
 

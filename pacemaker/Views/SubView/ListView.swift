@@ -12,7 +12,7 @@ struct ListView: View {
   let goalLevel: Int
   let showStartButton: Bool
   @Binding var selectedGoal: SubGoal?
-  @Binding var displayPhase: GoalDisplayPhaseEnum
+  let onTap: () -> Void
 
   var body: some View {
     Text("목표를 쉽게 이룰 수 있도록 5단계로 쪼개봤어요")
@@ -35,15 +35,30 @@ struct ListView: View {
     }
     if showStartButton {
       Button {
-//        displayPhase = .carousel()
+        onTap()
       } label: {
         Label("시작하기", systemImage: "arrow.right")
           .frame(maxWidth: .infinity)
           .padding(.vertical, 14)
       }
-      .buttonStyle(.glassProminent)
+      .tint(.accent)
+      .buttonStyle(.borderedProminent)
       .padding(.horizontal, 16)
       .padding(.vertical, 20)
     }
   }
+}
+
+#Preview {
+  Button {
+
+  } label: {
+    Label("시작하기", systemImage: "arrow.right")
+      .frame(maxWidth: .infinity)
+      .padding(.vertical, 14)
+  }
+  .tint(.accent)
+  .buttonStyle(.borderedProminent)
+  .padding(.horizontal, 16)
+  .padding(.vertical, 20)
 }
