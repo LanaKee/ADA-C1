@@ -17,6 +17,7 @@ struct MainView: View {
   @Environment(\.modelContext) var context
   @Query var savedGoals: [GoalModel]
   @StateObject private var viewModel = MainViewModel()
+  @State var currentGoal: GoalModel?
   
   private let client = GoalBreakDowner(instruction: instruction)
   var isInitialList: Bool {
@@ -37,7 +38,10 @@ struct MainView: View {
       switch result {
       case .success(let plan):
         viewModel.response = plan
-        let newGoal = GoalModel(goal: viewModel.goal, goals: plan)
+        let newGoal = GoalModel(
+          goal: viewModel.goal,
+          goals: plan
+        )
         context.insert(newGoal)
         viewModel.displayPhase = .initialList
 
@@ -65,7 +69,10 @@ struct MainView: View {
         }
         viewModel.response = try parseGoalBreakDown(from: text)
         viewModel.displayPhase = .initialList
-        let newGoal = GoalModel(goal: viewModel.goal, goals: GoalBreakDown(subgoals: viewModel.response?.subgoals ?? []))
+        let newGoal = GoalModel(
+          goal: viewModel.goal,
+          goals: GoalBreakDown(subgoals: viewModel.response?.subgoals ?? []),
+        )
         context.insert(newGoal)
         
       } catch {
@@ -74,6 +81,32 @@ struct MainView: View {
     }
   }
   
+  func completeGoal() -> Void {
+    viewModel.currentPage = viewModel.goalLevel
+    viewModel.goalLevel += 1
+    if let currentGoal = currentGoal {
+        currentGoal.goalLevel = currentGoal.goalLevel+1
+        refresh()
+    }
+  }
+  
+  func refresh() -> Void {
+    if !savedGoals.isEmpty {
+      if let index = savedGoals.firstIndex(where: { $0.state == .active }) {
+        viewModel.goal = savedGoals[index].goal
+        viewModel.response = savedGoals[index].goalBreakdown
+        viewModel.goalLevel = savedGoals[index].goalLevel
+        viewModel.displayPhase = .carousel
+        
+        currentGoal = savedGoals[index]
+      } else {
+        viewModel.displayPhase = .input
+      }
+    } else {
+      viewModel.displayPhase = .input
+    }
+  }
+
   var body: some View {
     NavigationStack {
       VStack {
@@ -88,7 +121,6 @@ struct MainView: View {
               onSubmit: {
                 await generateGoals()
                 viewModel.goalLevel = 1
-                
               }
             )
             Spacer()
@@ -164,18 +196,7 @@ struct MainView: View {
         }
       }
       .onAppear {
-        if !savedGoals.isEmpty {
-          if let index = savedGoals.firstIndex(where: { $0.state == .active }) {
-            viewModel.goal = savedGoals[index].goal
-            viewModel.response = savedGoals[index].goalBreakdown
-            viewModel.goalLevel = savedGoals[index].goalLevel
-            viewModel.displayPhase = .carousel
-          } else {
-            viewModel.displayPhase = .input
-          }
-        } else {
-          viewModel.displayPhase = .input
-        }
+        refresh()
       }
       .ignoresSafeArea(edges: .bottom)
       .background(.sky)
@@ -185,8 +206,7 @@ struct MainView: View {
           allSubgoals: viewModel.response?.subgoals ?? [],
           goalLevel: viewModel.goalLevel,
           onComplete: {
-            viewModel.goalLevel = viewModel.goalLevel + 1
-            viewModel.currentPage = viewModel.goalLevel
+            completeGoal()
           }
         )
       }
