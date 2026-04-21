@@ -40,7 +40,8 @@ struct TipRowView: View {
           .padding(.bottom, 16)
       }
     }
-    .glassEffect(.regular, in: .rect(cornerRadius: 16))
-    .padding(.horizontal, 10)
+    .overlay(RoundedRectangle(cornerRadius: 10).stroke(style: StrokeStyle(lineWidth: 0.5)))
+    .background(.white)
+    .cornerRadius(10)
   }
 }

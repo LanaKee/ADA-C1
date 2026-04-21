@@ -15,6 +15,7 @@ struct SubGoalView: View {
 
   @Environment(\.dismiss) private var dismiss
   @State private var expandedTipIndex: Int? = nil
+  @State private var showSkipAlert: Bool = false
 
   private var goalTips: [FAQ] {
     subGoal?.tips ?? []
@@ -52,8 +53,10 @@ struct SubGoalView: View {
               .padding(.horizontal, 30)
               .padding(.bottom, 20)
           }
-          .glassEffect(.regular, in: .rect(cornerRadius: 25))
-          .padding(10)
+          .overlay(RoundedRectangle(cornerRadius: 16).stroke(style: StrokeStyle(lineWidth: 1)))
+          .background(.white)
+          .cornerRadius(16)
+          .padding(16)
 
           VStack(alignment: .leading, spacing: 12) {
             HStack {
@@ -75,6 +78,7 @@ struct SubGoalView: View {
                   }
                 }
               )
+              .padding(.horizontal, 16)
             }
           }
           .padding(.top, 6)
@@ -92,30 +96,45 @@ struct SubGoalView: View {
                 .bold()
             }
             .buttonStyle(.borderedProminent)
-            .tint(.accent.opacity(0.7))
-            .padding(10)
+            .tint(.accent)
+            .padding(.horizontal, 16)
           } else {
             if (goalLevel > subGoal?.id ?? 0) {
               Label("이미 완료했어요", systemImage: "checkmark.circle.fill")
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 20)
-                .background(.green.opacity(0.3))
+                .background(.treeGreen)
                 .cornerRadius(40)
                 .padding(10)
             } else {
-              Label("\(goalLevel)단계를 먼저 완료해볼까요?", systemImage: "lock")
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 20)
-                .background(.gray.opacity(0.3))
-                .cornerRadius(40)
-                .padding(10)
-                .bold()
-
+              Button {
+                showSkipAlert = true
+              } label: {
+                Text("\(goalLevel)단계로 건너뛰기")
+                  .padding(10)
+                  .frame(maxWidth: .infinity)
+                  .foregroundStyle(.white)
+                  .bold()
+              }
+              .buttonStyle(.borderedProminent)
+              .tint(.accent)
+              .padding(.horizontal, 16)
             }
           }
         }
       }
-      .navigationTitle(subGoal?.goal ?? "로딩중...")
+    }
+    .navigationTitle(subGoal?.goal ?? "로딩중...")
+    .background(.sky)
+    .alert("정말로 건너뛸까요?", isPresented: $showSkipAlert) {
+      Button("취소", role: .cancel) {
+        
+      }
+      Button("삭제", role: .destructive) {
+
+      }
+    } message: {
+      Text("차례 차례 마일스톤을 달성해야 더 쉽게 최종 목표에 달성할 수 있어요")
     }
   }
 }
