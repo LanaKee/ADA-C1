@@ -38,25 +38,25 @@ class GoalModel {
     self.finishedAt = nil
   }
   
-  init(model: GoalModel, goalLevel: Int) {
-    self.id = model.id
-    self.state = model.state
-    self.goal = model.goal
-    self.goalBreakdown = model.goalBreakdown
-    self.createdAt = model.createdAt
-    self.finishedAt = model.finishedAt
-    
-    self.goalLevel = goalLevel
-  }
-  
-  init(model: GoalModel, goalState: GoalModelState) {
-    self.id = model.id
-    self.goal = model.goal
-    self.goalLevel = model.goalLevel
-    self.goalBreakdown = model.goalBreakdown
-    self.createdAt = model.createdAt
-    
-    self.state = goalState
-    self.finishedAt = Date()
-  }
+//  init(model: GoalModel, goalLevel: Int) {
+//    self.id = model.id
+//    self.state = model.state
+//    self.goal = model.goal
+//    self.goalBreakdown = model.goalBreakdown
+//    self.createdAt = model.createdAt
+//    self.finishedAt = model.finishedAt
+//    
+//    self.goalLevel = goalLevel
+//  }
+//  
+//  init(model: GoalModel, goalState: GoalModelState) {
+//    self.id = model.id
+//    self.goal = model.goal
+//    self.goalLevel = model.goalLevel
+//    self.goalBreakdown = model.goalBreakdown
+//    self.createdAt = model.createdAt
+//    
+//    self.state = goalState
+//    self.finishedAt = Date()
+//  }
 }
