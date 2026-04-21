@@ -130,7 +130,7 @@ struct SubGoalView: View {
       Button("취소", role: .cancel) {
         
       }
-      Button("삭제", role: .destructive) {
+      Button("건너뛰기", role: .destructive) {
 
       }
     } message: {

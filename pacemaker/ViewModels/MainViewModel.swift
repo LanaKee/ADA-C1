@@ -12,44 +12,77 @@ import Foundation
 
 @MainActor
 class MainViewModel: ObservableObject {
-  @Published var goal: String = ""
-  @Published var response: GoalBreakDown?
+  @Published var currentGoal: GoalModel?
+
+  @Published var goalInput: String = ""
+
   @Published var selectedGoal: SubGoal?
-  
-  @Published var goalLevel: Int = 0
-  @Published var currentPage: Int = 0
-  
+  @Published var currentPage: Int = 1
   @Published var isLoading: Bool = false
+
   @Published var displayPhase: GoalDisplayPhaseEnum = .input
   @Published var mainViewState: mainViewEnum = .main
-  
-  @Published var confettiTrigger: Int = 0
+  @Published var confettiTrigger: Int = 1
   @Published var selectedAssistant: AIAssistantEnum = .appleIntelligence
-  
-  var subgoals: [SubGoal] {
-    response?.subgoals ?? []
+
+  var goal: String {
+    currentGoal?.goal ?? ""
   }
-  
+
+  var subgoals: [SubGoal] {
+    currentGoal?.goalBreakdown.subgoals ?? []
+  }
+
+  var goalLevel: Int {
+    currentGoal?.goalLevel ?? 1
+  }
+
   var isComplete: Bool {
     goalLevel > 5
   }
-  
+
   var showCarouselListToggle: Bool {
     if case .list = displayPhase { return true }
     if case .carousel = displayPhase { return true }
     return false
   }
-  
-  func completeSubgoal(_ subgoal: SubGoal) {
-    goalLevel = subgoal.id + 1
-    currentPage = subgoal.id
+
+  func load(from savedGoals: [GoalModel]) {
+    if let activeGoal = savedGoals.first(where: { $0.state == .active }) {
+      currentGoal = activeGoal
+      goalInput = activeGoal.goal
+      currentPage = activeGoal.goalLevel-1
+      if activeGoal.goalLevel > 5 {
+        displayPhase = .final
+      } else {
+        displayPhase = .carousel
+      }
+    } else {
+      currentGoal = nil
+      displayPhase = .input
+    }
+  }
+
+  func setNewGoal(_ goalModel: GoalModel) {
+    currentGoal = goalModel
+    displayPhase = .initialList
+    currentPage = 0
+  }
+
+  func completeGoal() {
+    guard let currentGoal else { return }
+    currentGoal.goalLevel += 1
+    currentPage = currentGoal.goalLevel-1
+
+    objectWillChange.send()
+
     if isComplete {
       displayPhase = .final
     }
   }
-  
+
   func toggleViewMode() {
-    guard response != nil else { return }
+    guard currentGoal != nil else { return }
     withAnimation(.easeInOut(duration: 0.3)) {
       switch displayPhase {
       case .carousel:
@@ -61,8 +94,8 @@ class MainViewModel: ObservableObject {
       }
     }
   }
-  
-  func toggleBonsaiView () {
+
+  func toggleBonsaiView() {
     withAnimation(.easeInOut(duration: 0.3)) {
       switch mainViewState {
       case .main:
@@ -72,11 +105,8 @@ class MainViewModel: ObservableObject {
       }
     }
   }
-  
-  
-  
+
   func firework() {
     confettiTrigger += 1
   }
 }
-

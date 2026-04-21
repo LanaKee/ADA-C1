@@ -11,6 +11,8 @@ import SwiftUI
 import SwiftData
 
 struct BonsaiView: View {
+  let onDelete: () -> Void
+  
   @Environment(\.colorScheme) var colorScheme
   @Environment(\.modelContext) var context
   @Query(sort: \GoalModel.createdAt, order: .reverse) var savedGoals: [GoalModel]
@@ -18,6 +20,10 @@ struct BonsaiView: View {
   @State private var goalToDelete: GoalModel?
   @State private var showDeleteAlert = false
 
+  init (onDelete: @escaping () -> Void) {
+    self.onDelete = onDelete
+  }
+  
   private func dateRangeText(for goal: GoalModel) -> String {
     let formatter = DateFormatter()
     formatter.dateFormat = "yyyy.MM.dd"
@@ -34,7 +40,7 @@ struct BonsaiView: View {
         .font(.memom(.title))
         .padding(.top, 8)
         .padding(.bottom, 12)
-
+      
       List {
         ForEach(savedGoals, id: \.id) { goal in
           NavigationLink {
@@ -58,8 +64,14 @@ struct BonsaiView: View {
               }
             }
           }
-          .listRowBackground(Color.sylvaBg)
+          .padding(.horizontal, 16)
+          .padding(.vertical,16)
+          .listRowBackground(Color.clear)
+          .overlay(RoundedRectangle(cornerRadius: 16).stroke(style: StrokeStyle(lineWidth: 1)))
           .listRowSeparator(.hidden)
+          .background(.sylvaBg)
+          .cornerRadius(16)
+          .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
           .swipeActions(edge: .trailing, allowsFullSwipe: false) {
             Button(role: .destructive) {
               goalToDelete = goal
@@ -81,6 +93,7 @@ struct BonsaiView: View {
         if let goal = goalToDelete {
           context.delete(goal)
           goalToDelete = nil
+          onDelete()
         }
       }
     } message: {
@@ -89,4 +102,27 @@ struct BonsaiView: View {
   }
 }
 
+#Preview {
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: GoalModel.self, configurations: config)
 
+    let faq = FAQ(question: "어떻게 시작하나요?", answer: "작은 것부터 시작하세요.")
+    let subgoal = SubGoal(
+        id: 1,
+        goal: "스트레칭 하기",
+        description: "매일 아침 10분 스트레칭",
+        tips: [faq, faq, faq]
+    )
+    let breakdown = GoalBreakDown(subgoals: [subgoal])
+
+    let sample1 = GoalModel(goal: "매일 운동하기", goals: breakdown)
+    let sample2 = GoalModel(goal: "책 10권 읽기", goals: breakdown)
+
+    container.mainContext.insert(sample1)
+    container.mainContext.insert(sample2)
+
+    return NavigationStack {
+        BonsaiView {}.background(.sky)
+    }
+    .modelContainer(container)
+}
