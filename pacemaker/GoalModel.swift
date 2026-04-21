@@ -8,7 +8,7 @@
 import Foundation
 import SwiftData
 
-enum GoalModelState: Codable {
+enum GoalModelState: Equatable & Codable {
   case active
   case finished
   case givenUp
@@ -19,7 +19,7 @@ class GoalModel {
   @Attribute(.unique) var id: UUID
   var state: GoalModelState
   var goal: String
-  var goalLevel: Int
+  var goalLevel: Int = 1
   
   var goalBreakdown: GoalBreakDown
   

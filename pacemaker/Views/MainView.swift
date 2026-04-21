@@ -49,7 +49,7 @@ struct MainView: View {
       do {
         let ai = FirebaseAI.firebaseAI(backend: .googleAI())
         let model = ai.generativeModel(
-          modelName: "gemini-3-flash-preview",
+          modelName: "gemini-2.5-flash-lite",
           generationConfig : GenerationConfig(
             responseMIMEType: "application/json",
             responseSchema: geminiSchema
@@ -100,7 +100,7 @@ struct MainView: View {
               Text(viewModel.goal)
                 .font(.memom(.largeTitle))
                 .foregroundStyle(.primary)
-                .padding(.top, 16)
+
               ListView(
                 subgoals: viewModel.subgoals,
                 goalLevel: viewModel.goalLevel,
@@ -113,6 +113,9 @@ struct MainView: View {
             }
             
           case .carousel:
+            Text(viewModel.goal)
+                .font(.memom(.largeTitle))
+                .foregroundStyle(.primary)
             if let subgoals = viewModel.response?.subgoals,
                !subgoals.isEmpty {
               Carousel(
@@ -163,6 +166,7 @@ struct MainView: View {
       .onAppear {
         if !savedGoals.isEmpty {
           if let index = savedGoals.firstIndex(where: { $0.state == .active }) {
+            viewModel.goal = savedGoals[index].goal
             viewModel.response = savedGoals[index].goalBreakdown
             viewModel.goalLevel = savedGoals[index].goalLevel
             viewModel.displayPhase = .carousel
@@ -175,19 +179,31 @@ struct MainView: View {
       }
       .ignoresSafeArea(edges: .bottom)
       .background(.sky)
+      .navigationDestination(item: $viewModel.selectedGoal) { goal in
+        SubGoalView(
+          subGoal: goal,
+          allSubgoals: viewModel.response?.subgoals ?? [],
+          goalLevel: viewModel.goalLevel,
+          onComplete: {
+            viewModel.goalLevel = viewModel.goalLevel + 1
+            viewModel.currentPage = viewModel.goalLevel
+          }
+        )
+      }
       .toolbar {
         RecordToolbarButton{
           viewModel.toggleBonsaiView()
         }
-        TraillingToolbarButton(
-          displayPhase: viewModel.displayPhase,
-          selectedAssistant: $viewModel.selectedAssistant,
-          toggle: {
-            viewModel.toggleViewMode()
-          }
-        )
+        if viewModel.mainViewState != .bonsai {
+          TraillingToolbarButton(
+            displayPhase: viewModel.displayPhase,
+            selectedAssistant: $viewModel.selectedAssistant,
+            toggle: {
+              viewModel.toggleViewMode()
+            }
+          )
+        }
       }
-
     }
   }
 }

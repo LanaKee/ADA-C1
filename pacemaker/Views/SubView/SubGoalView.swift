@@ -28,12 +28,12 @@ struct SubGoalView: View {
             HStack(alignment: .top) {
               ZStack {
                 RoundedRectangle(cornerRadius: 16, style: .continuous)
-                  .fill(Color.accentColor.opacity(0.15))
+                  .fill(Color.accent.opacity(0.15))
                   .frame(width: 56, height: 56)
 
                 Text("\(subGoal?.id ?? 0)")
                   .font(.title2.bold())
-                  .foregroundStyle(Color.accentColor)
+                  .foregroundStyle(Color.accent)
               }
               .padding(.horizontal, 30)
               .padding(.top, 20)

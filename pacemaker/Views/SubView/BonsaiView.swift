@@ -18,14 +18,6 @@ struct BonsaiView: View {
   @State private var goalToDelete: GoalModel?
   @State private var showDeleteAlert = false
 
-  private func treeLevel(for goal: GoalModel) -> Int {
-    switch goal.state {
-    case .finished: return 5
-    case .active: return 3
-    case .givenUp: return 1
-    }
-  }
-
   private func dateRangeText(for goal: GoalModel) -> String {
     let formatter = DateFormatter()
     formatter.dateFormat = "yyyy.MM.dd"
@@ -49,7 +41,7 @@ struct BonsaiView: View {
             BonsaiDetailView(goal: goal)
           } label: {
             HStack(spacing: 12) {
-              Image("img_tree\(treeLevel(for: goal))")
+              Image("img_bonsai")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 60, height: 60)
@@ -96,4 +88,5 @@ struct BonsaiView: View {
     }
   }
 }
+
 
