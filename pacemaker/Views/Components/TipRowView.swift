@@ -11,7 +11,7 @@ struct TipRowView: View {
   let tip: FAQ
   let isExpanded: Bool
   let onTap: () -> Void
-
+  
   var body: some View {
     VStack(alignment: .leading, spacing: 0) {
       Button {
@@ -22,16 +22,17 @@ struct TipRowView: View {
             .font(.subheadline.bold())
             .multilineTextAlignment(.leading)
             .frame(maxWidth: .infinity, alignment: .leading)
-
+          
           Image(systemName: "chevron.down")
             .font(.caption.bold())
             .foregroundStyle(.secondary)
             .rotationEffect(.degrees(isExpanded ? 180 : 0))
         }
+        .contentShape(Rectangle())
         .padding(16)
       }
       .buttonStyle(.plain)
-
+      
       if isExpanded {
         Text(tip.answer)
           .font(.subheadline)

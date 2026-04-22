@@ -34,54 +34,54 @@ struct GoalCard: View {
   }
   
   var body: some View {
-    ZStack {
-      HStack(alignment: .top, spacing: 12) {
-        VStack(alignment: .leading, spacing: 6) {
-          HStack(alignment: .center) {
-            ZStack {
-              RoundedRectangle(cornerRadius: 8, style: .continuous)
-                .fill(status == .completed ? .treeGreen.opacity(0.8) : .accent.opacity(0.4))
-                .frame(width: 32, height: 32)
-              
-              switch status {
-              case .normal:
-                Text("\(subgoal.id)")
-              case .completed:
-                Image(systemName: "checkmark")
-                  .foregroundStyle(.white)
-              case .inProgress:
-                Text("\(subgoal.id)")
+      Button {
+          if !disabled { onTap() }
+      } label: {
+          HStack(alignment: .top, spacing: 12) {
+              VStack(alignment: .leading, spacing: 6) {
+                  HStack(alignment: .center) {
+                      ZStack {
+                          RoundedRectangle(cornerRadius: 8, style: .continuous)
+                              .fill(status == .completed ? .treeGreen.opacity(0.8) : .accent.opacity(0.4))
+                              .frame(width: 32, height: 32)
+
+                          switch status {
+                          case .normal:
+                              Text("\(subgoal.id)")
+                          case .completed:
+                              Image(systemName: "checkmark")
+                                  .foregroundStyle(.white)
+                          case .inProgress:
+                              Text("\(subgoal.id)")
+                          }
+                      }
+
+                      Text(subgoal.goal)
+                          .font(.headline.bold())
+
+                      Spacer()
+                  }
+
+                  Text(subgoal.description)
               }
-            }
-            
-            Text(subgoal.goal)
-              .font(.headline.bold())
-            
-            Spacer()
+              .padding(.leading, 10)
+              Spacer()
+              if !disabled {
+                  Image(systemName: "chevron.right")
+                      .font(.caption.weight(.semibold))
+                      .foregroundStyle(.secondary)
+              }
           }
-          
-          Text(subgoal.description)
-        }
-        .padding(.leading, 10)
-        Spacer()
-        if !disabled {
-          Image(systemName: "chevron.right")
-            .font(.caption.weight(.semibold))
-            .foregroundStyle(.secondary)
-        }
+          .contentShape(Rectangle())
+          .fixedSize(horizontal: false, vertical: true)
+          .frame(maxWidth: .infinity, alignment: .leading)
+          .padding()
+          .background(status == .completed ? .treeGreen.opacity(0.8) : .sylvaBg)
+          .overlay(RoundedRectangle(cornerRadius: 16).stroke(style: StrokeStyle(lineWidth: 1)))
+          .cornerRadius(16)
       }
-      .fixedSize(horizontal: false, vertical: true)
-      .frame(maxWidth: .infinity, alignment: .leading)
-      .padding()
-      .background(status == .completed ? .treeGreen.opacity(0.7) : .sylvaBg)
-      .overlay(RoundedRectangle(cornerRadius: 16).stroke(style: StrokeStyle(lineWidth: 1)))
-      .cornerRadius(16)
-      .simultaneousGesture(TapGesture().onEnded {
-        if !disabled {
-          onTap()
-        }
-      })
-    }
+      .buttonStyle(.plain)
+      .disabled(disabled)
   }
 }
 
