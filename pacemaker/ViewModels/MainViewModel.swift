@@ -105,6 +105,19 @@ class MainViewModel: ObservableObject {
     }
   }
   
+  func skipMileStone(to: SubGoal) {
+    guard let currentGoal else { return }
+    currentGoal.goalLevel = to.id
+    currentPage = currentGoal.goalLevel-1
+    
+    objectWillChange.send()
+    
+    if isComplete {
+      displayPhase = .final
+    }
+
+  }
+  
   func completeGoal () {
     if !isComplete {
       return

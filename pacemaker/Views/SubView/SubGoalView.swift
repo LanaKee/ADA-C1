@@ -12,6 +12,7 @@ struct SubGoalView: View {
   let allSubgoals: [SubGoal]
   let goalLevel: Int
   let onComplete: () -> Void
+  let onSkip: () -> Void
 
   @Environment(\.dismiss) private var dismiss
   @State private var expandedTipIndex: Int? = nil
@@ -111,7 +112,7 @@ struct SubGoalView: View {
                 Button {
                   showSkipAlert = true
                 } label: {
-                  Text("\(goalLevel)단계로 건너뛰기")
+                  Text("\(subGoal?.id ?? 0)단계로 건너뛰기")
                     .padding(10)
                     .frame(maxWidth: .infinity)
                     .foregroundStyle(.white)
@@ -133,7 +134,7 @@ struct SubGoalView: View {
         
       }
       Button("건너뛰기", role: .destructive) {
-
+        onSkip()
       }
     } message: {
       Text("차례 차례 마일스톤을 달성해야 더 쉽게 최종 목표에 달성할 수 있어요")
@@ -170,6 +171,7 @@ struct SubGoalView: View {
         ]
       ),
     ], goalLevel: 2,
-    onComplete: {}
+    onComplete: {},
+    onSkip: {}
   )
 }

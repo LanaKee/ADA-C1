@@ -194,6 +194,9 @@ struct MainView: View {
           goalLevel: viewModel.goalLevel,
           onComplete: {
             viewModel.completeMileStone()
+          },
+          onSkip: {
+            viewModel.skipMileStone(to: goal)
           }
         )
       }

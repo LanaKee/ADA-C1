@@ -71,7 +71,8 @@ struct BonsaiDetailView: View {
         subGoal: g,
         allSubgoals:goal.goalBreakdown.subgoals,
         goalLevel: 100,
-        onComplete: {}
+        onComplete: {},
+        onSkip: {}
       )
     }
   }
