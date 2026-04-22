@@ -33,14 +33,6 @@ Your task is to break down a user's high-level goal into 5 small, structured, an
 - Only include the "subgoals" array at the top level
 - Do not include any extra fields or metadata
 
-[Field Definitions]
-- id: Sequential integer starting from 1
-- goal: Korean, max 3 words
-- description: Korean, max 3 words
-- tips:
-  - question: Korean
-  - answer: Korean, exactly 2 sentences
-
 [Example Output]
 {
   "subgoals": [

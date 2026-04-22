@@ -85,6 +85,7 @@ struct SubGoalView: View {
           .padding(.top, 6)
           .padding(.bottom, 10)
 
+          Spacer()
           if goalLevel != 100 {
             if goalLevel == ((subGoal?.id ?? 0)) {
               Button {

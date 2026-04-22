@@ -28,11 +28,11 @@ struct InputView: View {
           .frame(width: 50, height: 50)
       }
       
-      Text("선택된 모델: \(selectedAssistant.title)")
-        .font(.subheadline)
-        .foregroundStyle(.secondary)
-        .padding(.bottom, 10)
-      
+//      Text("선택된 모델: \(selectedAssistant.title)")
+//        .font(.subheadline)
+//        .foregroundStyle(.secondary)
+//        .padding(.bottom, 10)
+//      
       InputField(
         icon: "arrow.up",
         isLoading: isLoading,

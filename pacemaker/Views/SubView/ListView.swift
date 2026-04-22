@@ -18,7 +18,7 @@ struct ListView: View {
     Text("목표를 쉽게 이룰 수 있도록 5단계로 쪼개봤어요")
       .font(.memom(.subheadline))
       .foregroundStyle(.secondary)
-      .padding(.bottom, 8)
+      .padding(.horizontal, 8)
     ScrollView {
       VStack(spacing: 12) {
         ForEach(subgoals, id: \.id) { subgoal in
