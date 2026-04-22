@@ -23,7 +23,7 @@ struct TraillingToolbarButton: ToolbarContent {
             }
           }
         } label: {
-          Label("설정", systemImage: "ellipsis")
+          Label("설정", systemImage: selectedAssistant.icon)
         }
       } else if displayPhase == .list || displayPhase == .carousel {
         Button {
