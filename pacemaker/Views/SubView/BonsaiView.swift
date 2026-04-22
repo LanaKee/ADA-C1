@@ -43,41 +43,45 @@ struct BonsaiView: View {
       
       List {
         ForEach(savedGoals, id: \.id) { goal in
-          NavigationLink {
-            BonsaiDetailView(goal: goal)
-          } label: {
-            HStack(spacing: 12) {
-              Image("img_bonsai")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 60, height: 60)
-
-              VStack(alignment: .leading, spacing: 4) {
-                Text(goal.goal)
-                  .font(.headline.bold())
-                  .foregroundStyle(.primary)
-                  .multilineTextAlignment(.leading)
-
-                Text(dateRangeText(for: goal))
-                  .font(.caption)
-                  .foregroundStyle(.secondary)
+          if (goal.state == .active) {
+            EmptyView()
+          } else {
+            NavigationLink {
+              BonsaiDetailView(goal: goal)
+            } label: {
+              HStack(spacing: 12) {
+                Image("img_bonsai")
+                  .resizable()
+                  .scaledToFit()
+                  .frame(width: 60, height: 60)
+                
+                VStack(alignment: .leading, spacing: 4) {
+                  Text(goal.goal)
+                    .font(.headline.bold())
+                    .foregroundStyle(.primary)
+                    .multilineTextAlignment(.leading)
+                  
+                  Text(dateRangeText(for: goal))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                }
               }
             }
-          }
-          .padding(.horizontal, 16)
-          .padding(.vertical,16)
-          .listRowBackground(Color.clear)
-          .overlay(RoundedRectangle(cornerRadius: 16).stroke(style: StrokeStyle(lineWidth: 1)))
-          .listRowSeparator(.hidden)
-          .background(.sylvaBg)
-          .cornerRadius(16)
-          .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
-          .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-            Button(role: .destructive) {
-              goalToDelete = goal
-              showDeleteAlert = true
-            } label: {
-              Label("삭제", systemImage: "xmark")
+            .padding(.horizontal, 16)
+            .padding(.vertical,16)
+            .listRowBackground(Color.clear)
+            .overlay(RoundedRectangle(cornerRadius: 16).stroke(style: StrokeStyle(lineWidth: 1)))
+            .listRowSeparator(.hidden)
+            .background(.sylvaBg)
+            .cornerRadius(16)
+            .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
+            .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+              Button(role: .destructive) {
+                goalToDelete = goal
+                showDeleteAlert = true
+              } label: {
+                Label("삭제", systemImage: "xmark")
+              }
             }
           }
         }

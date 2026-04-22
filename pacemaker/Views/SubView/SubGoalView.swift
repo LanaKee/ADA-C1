@@ -84,33 +84,13 @@ struct SubGoalView: View {
           .padding(.top, 6)
           .padding(.bottom, 10)
 
-          if goalLevel == ((subGoal?.id ?? 0)) {
-            Button {
-              onComplete()
-              dismiss()
-            } label: {
-              Text("완료했어요")
-                .padding(10)
-                .frame(maxWidth: .infinity)
-                .foregroundStyle(.white)
-                .bold()
-            }
-            .buttonStyle(.borderedProminent)
-            .tint(.accent)
-            .padding(.horizontal, 16)
-          } else {
-            if (goalLevel > subGoal?.id ?? 0) {
-              Label("이미 완료했어요", systemImage: "checkmark.circle.fill")
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 20)
-                .background(.treeGreen)
-                .cornerRadius(40)
-                .padding(10)
-            } else {
+          if goalLevel != 100 {
+            if goalLevel == ((subGoal?.id ?? 0)) {
               Button {
-                showSkipAlert = true
+                onComplete()
+                dismiss()
               } label: {
-                Text("\(goalLevel)단계로 건너뛰기")
+                Text("완료했어요")
                   .padding(10)
                   .frame(maxWidth: .infinity)
                   .foregroundStyle(.white)
@@ -119,6 +99,28 @@ struct SubGoalView: View {
               .buttonStyle(.borderedProminent)
               .tint(.accent)
               .padding(.horizontal, 16)
+            } else {
+              if (goalLevel > subGoal?.id ?? 0) {
+                Label("이미 완료했어요", systemImage: "checkmark.circle.fill")
+                  .frame(maxWidth: .infinity)
+                  .padding(.vertical, 20)
+                  .background(.treeGreen)
+                  .cornerRadius(40)
+                  .padding(10)
+              } else {
+                Button {
+                  showSkipAlert = true
+                } label: {
+                  Text("\(goalLevel)단계로 건너뛰기")
+                    .padding(10)
+                    .frame(maxWidth: .infinity)
+                    .foregroundStyle(.white)
+                    .bold()
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.accent)
+                .padding(.horizontal, 16)
+              }
             }
           }
         }

@@ -138,6 +138,19 @@ struct MainView: View {
               .foregroundStyle(.secondary)
               .padding(.top, 4)
             Spacer()
+            Button {
+              viewModel.completeGoal()
+            } label : {
+              Text("새로운 목표 설정하기")
+                .padding(10)
+                .frame(maxWidth: .infinity)
+                .foregroundStyle(.white)
+                .bold()
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(.accent)
+            .padding(.horizontal, 16)
+            .padding(.bottom, 20)
           }
         } else {
           BonsaiView {
@@ -180,7 +193,7 @@ struct MainView: View {
           allSubgoals: viewModel.subgoals,
           goalLevel: viewModel.goalLevel,
           onComplete: {
-            viewModel.completeGoal()
+            viewModel.completeMileStone()
           }
         )
       }

@@ -13,40 +13,40 @@ import Foundation
 @MainActor
 class MainViewModel: ObservableObject {
   @Published var currentGoal: GoalModel?
-
+  
   @Published var goalInput: String = ""
-
+  
   @Published var selectedGoal: SubGoal?
   @Published var currentPage: Int = 1
   @Published var isLoading: Bool = false
-
+  
   @Published var displayPhase: GoalDisplayPhaseEnum = .input
   @Published var mainViewState: mainViewEnum = .main
   @Published var confettiTrigger: Int = 1
   @Published var selectedAssistant: AIAssistantEnum = .appleIntelligence
-
+  
   var goal: String {
     currentGoal?.goal ?? ""
   }
-
+  
   var subgoals: [SubGoal] {
     currentGoal?.goalBreakdown.subgoals ?? []
   }
-
+  
   var goalLevel: Int {
     currentGoal?.goalLevel ?? 1
   }
-
+  
   var isComplete: Bool {
     goalLevel > 5
   }
-
+  
   var showCarouselListToggle: Bool {
     if case .list = displayPhase { return true }
     if case .carousel = displayPhase { return true }
     return false
   }
-
+  
   func load(from savedGoals: [GoalModel]) {
     if let activeGoal = savedGoals.first(where: { $0.state == .active }) {
       currentGoal = activeGoal
@@ -62,23 +62,35 @@ class MainViewModel: ObservableObject {
       displayPhase = .input
     }
   }
-
+  
   func setNewGoal(_ goalModel: GoalModel) {
     currentGoal = goalModel
     displayPhase = .initialList
     currentPage = 0
   }
-
-  func completeGoal() {
+  
+  func completeMileStone() {
     guard let currentGoal else { return }
     currentGoal.goalLevel += 1
     currentPage = currentGoal.goalLevel-1
-
+    
     objectWillChange.send()
-
+    
     if isComplete {
       displayPhase = .final
     }
+  }
+  
+  func completeGoal () {
+    if !isComplete {
+      return
+    }
+    guard let currentGoal else { return }
+    currentGoal.state = .finished
+    currentGoal.finishedAt = Date()
+
+    objectWillChange.send()
+    displayPhase = .input
   }
 
   func toggleViewMode() {
