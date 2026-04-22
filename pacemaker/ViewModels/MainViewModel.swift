@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 import Combine
 import Foundation
+import FirebaseAILogic
 
 @MainActor
 class MainViewModel: ObservableObject {
@@ -24,6 +25,11 @@ class MainViewModel: ObservableObject {
   @Published var mainViewState: mainViewEnum = .main
   @Published var confettiTrigger: Int = 1
   @Published var selectedAssistant: AIAssistantEnum = .appleIntelligence
+  
+  let imageModel = FirebaseAI.firebaseAI(backend: .googleAI()).generativeModel(
+    modelName: "gemini-3.1-flash-image-preview",
+    generationConfig: GenerationConfig(responseModalities: [.text, .image])
+  )
   
   var goal: String {
     currentGoal?.goal ?? ""
@@ -45,6 +51,24 @@ class MainViewModel: ObservableObject {
     if case .list = displayPhase { return true }
     if case .carousel = displayPhase { return true }
     return false
+  }
+  
+  func generateImage() async -> UIImage? {
+    let prompt = makeBonsaiPrompt(goal: goal)
+    do {
+      let response = try await imageModel.generateContent(prompt)
+      guard let inlineDataPart = response.inlineDataParts.first else {
+        return nil
+      }
+      guard let uiImage = UIImage(data: inlineDataPart.data) else {
+        return nil
+      }
+      return uiImage
+    } catch {
+      // Log or handle the error as needed
+      print("generateImage error: \(error)")
+      return nil
+    }
   }
   
   func load(from savedGoals: [GoalModel]) {
@@ -122,3 +146,4 @@ class MainViewModel: ObservableObject {
     confettiTrigger += 1
   }
 }
+
