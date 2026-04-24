@@ -1,6 +1,6 @@
 //
-//  pacemakerApp.swift
-//  pacemaker
+//  SylvaApp.swift
+//  Sylva
 //
 //  Created by Lanakee on 3/20/26.
 //
@@ -11,7 +11,7 @@ import FirebaseCore
 import FirebaseAppCheck
 
 @main
-struct pacemakerApp: App {
+struct SylvaApp: App {
   init() {
     #if DEBUG
     let providerFactory = AppCheckDebugProviderFactory()

@@ -37,7 +37,7 @@
 			exceptions = (
 				965661D32F7BA80000D57731 /* Exceptions for "pacemaker" folder in "Sylva" target */,
 			);
-			path = pacemaker;
+			path = Sylva;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -106,7 +106,7 @@
 				962FF26C2F91C20E00EBE9CB /* FirebaseAppDistribution-Beta */,
 				962FF26E2F91C20E00EBE9CB /* FirebaseCore */,
 			);
-			productName = pacemaker;
+			productName = Sylva;
 			productReference = 9682C6A32F6D148E00C5E030 /* Sylva.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -335,7 +335,7 @@
 				DEVELOPMENT_TEAM = P9K4FP6UPH;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = pacemaker/Info.plist;
+				INFOPLIST_FILE = Sylva/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
